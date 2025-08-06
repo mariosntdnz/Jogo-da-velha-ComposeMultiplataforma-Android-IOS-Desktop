@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.example.project.tictactoe.StartGameScreen
 import org.example.project.tictactoe.TicTacToeScreen
+import org.example.project.tictactoe.TicTacToeState
 
 
 @Composable
@@ -16,7 +17,17 @@ fun AppNavigation() {
             StartGameScreen(navController = navController)
         }
         composable<Screen.TicTacToe> {
-            TicTacToeScreen(navController = navController)
+            TicTacToeScreen(
+                navController = navController,
+                state = TicTacToeState(
+                    gridLength = 3,
+                    currentGrid = hashMapOf(
+                        Pair(0, listOf("X","","O")),
+                        Pair(1, listOf("X","X","O")),
+                        Pair(2, listOf("X","",""))
+                    )
+                )
+            )
         }
     }
 }
