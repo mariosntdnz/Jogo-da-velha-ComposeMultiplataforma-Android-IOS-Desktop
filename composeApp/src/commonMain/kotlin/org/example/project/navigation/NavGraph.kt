@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.example.project.ui.tictactoe.StartGameScreen
 import org.example.project.ui.tictactoe.TicTacToeScreen
-import org.example.project.ui.tictactoe.TicTacToeState
 
 
 @Composable
