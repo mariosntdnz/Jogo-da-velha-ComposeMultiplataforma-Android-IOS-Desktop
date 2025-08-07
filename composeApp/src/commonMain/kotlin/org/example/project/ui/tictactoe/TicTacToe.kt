@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.example.project.getPlatform
+import org.example.project.utils.clickableWithoutAnimation
 import org.example.project.viewmodels.TicTacToeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -66,7 +67,7 @@ fun TicTacToeScreen(
             text = getPlatform().name,
             fontSize = 32.sp,
             color = Color.Blue,
-            modifier = Modifier.clickable(onClick = navController::navigateUp)
+            modifier = Modifier.clickableWithoutAnimation(onClick = navController::navigateUp)
         )
 
         LazyVerticalGrid(
@@ -103,7 +104,7 @@ fun TicTacToeScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White)
-                            .clickable {
+                            .clickableWithoutAnimation {
                                 click = true
                             }
                         ,
