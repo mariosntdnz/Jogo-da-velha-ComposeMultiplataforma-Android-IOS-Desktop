@@ -3,7 +3,6 @@ package org.example.project.ui.tictactoe
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,20 +32,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.example.project.getPlatform
 import org.example.project.utils.clickableWithoutAnimation
+import org.example.project.viewmodels.TicTacToeItem
 import org.example.project.viewmodels.TicTacToeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 data class TicTacToeState(
     val gridLength: Int,
-    val currentGrid: HashMap<Int, List<String>>
+    val currentGrid: HashMap<Int, List<TicTacToeItem>>
 ) {
-    val size get() = gridLength * gridLength
-    fun getGridValueFromInt(index: Int): String {
-        val row = index / gridLength
-        val col = index % gridLength
-        val value = currentGrid[row]?.getOrNull(col) ?: ""
-        return value
-    }
+    val currentGridList get() = currentGrid.values.flatten()
 }
 
 
@@ -70,55 +65,77 @@ fun TicTacToeScreen(
             modifier = Modifier.clickableWithoutAnimation(onClick = navController::navigateUp)
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(state.gridLength),
+        TicTacToeGrid(
+            qtyCells = state.gridLength,
+            list = state.currentGridList
+        )
+
+    }
+}
+
+@Composable
+fun TicTacToeGrid(
+    qtyCells: Int,
+    list: List<TicTacToeItem>
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(qtyCells),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(Color.Blue)
+        ,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(list) { item ->
+            TicTacToeGridItem(
+                ticTacToeItem = item
+            )
+        }
+    }
+}
+
+@Composable
+fun TicTacToeGridItem(
+    ticTacToeItem: TicTacToeItem
+) {
+
+    val alphaAnim = remember { Animatable(0f) }
+    var click by remember { mutableStateOf(false) }
+
+    LaunchedEffect(click) {
+        if (click) {
+            alphaAnim.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 2000)
+            )
+        }
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f),
+        shape = RectangleShape,
+        elevation = 0.dp
+    ) {
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(Color.Blue)
+                .fillMaxSize()
+                .background(Color.White)
+                .clickableWithoutAnimation {
+                    click = true
+                }
             ,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            contentAlignment = Alignment.Center
         ) {
-            items(state.size) { index ->
-                val alphaAnim = remember { Animatable(0f) }
-                var click by remember { mutableStateOf(false) }
-
-                LaunchedEffect(click) {
-                    if (click) {
-                        alphaAnim.animateTo(
-                            targetValue = 1f,
-                            animationSpec = tween(durationMillis = 2000)
-                        )
-                    }
-                }
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f),
-                    shape = RectangleShape,
-                    elevation = 0.dp
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                            .clickableWithoutAnimation {
-                                click = true
-                            }
-                        ,
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = state.getGridValueFromInt(index),
-                            fontSize = 36.sp,
-                            modifier = Modifier
-                                .alpha(alphaAnim.value)
-                        )
-                    }
-                }
-            }
+            Text(
+                text = ticTacToeItem.label,
+                fontSize = 36.sp,
+                modifier = Modifier
+                    .alpha(alphaAnim.value)
+            )
         }
     }
 }
