@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.example.project.ui.getPlatform
+import org.example.project.getPlatform
 
 data class TicTacToeState(
     val gridLength: Int,

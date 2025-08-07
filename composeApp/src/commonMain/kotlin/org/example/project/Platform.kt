@@ -1,4 +1,4 @@
-package org.example.project.ui
+package org.example.project
 
 interface Platform {
     val name: String

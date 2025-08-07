@@ -1,4 +1,4 @@
-package org.example.project.ui.navigation
+package org.example.project.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
