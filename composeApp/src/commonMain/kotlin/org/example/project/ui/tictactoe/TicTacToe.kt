@@ -28,8 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.example.project.getPlatform
+import org.example.project.viewmodels.TicTacToeViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 data class TicTacToeState(
     val gridLength: Int,
@@ -47,9 +50,12 @@ data class TicTacToeState(
 
 @Composable
 fun TicTacToeScreen(
-    navController: NavController,
-    state: TicTacToeState
+    navController: NavController
 ) {
+
+    val viewModel = koinViewModel<TicTacToeViewModel>()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),

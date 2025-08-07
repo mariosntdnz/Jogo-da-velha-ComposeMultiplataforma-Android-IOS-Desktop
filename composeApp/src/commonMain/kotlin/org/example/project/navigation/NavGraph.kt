@@ -18,15 +18,7 @@ fun AppNavigation() {
         }
         composable<Screen.TicTacToe> {
             TicTacToeScreen(
-                navController = navController,
-                state = TicTacToeState(
-                    gridLength = 3,
-                    currentGrid = hashMapOf(
-                        Pair(0, listOf("X","","O")),
-                        Pair(1, listOf("X","X","O")),
-                        Pair(2, listOf("X","",""))
-                    )
-                )
+                navController = navController
             )
         }
     }
