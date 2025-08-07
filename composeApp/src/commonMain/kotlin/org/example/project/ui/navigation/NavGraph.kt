@@ -1,12 +1,12 @@
-package org.example.project.navigation
+package org.example.project.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.example.project.tictactoe.StartGameScreen
-import org.example.project.tictactoe.TicTacToeScreen
-import org.example.project.tictactoe.TicTacToeState
+import org.example.project.ui.tictactoe.StartGameScreen
+import org.example.project.ui.tictactoe.TicTacToeScreen
+import org.example.project.ui.tictactoe.TicTacToeState
 
 
 @Composable

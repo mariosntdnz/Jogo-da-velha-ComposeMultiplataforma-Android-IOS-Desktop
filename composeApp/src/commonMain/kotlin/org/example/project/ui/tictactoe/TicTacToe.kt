@@ -1,4 +1,4 @@
-package org.example.project.tictactoe
+package org.example.project.ui.tictactoe
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.example.project.getPlatform
+import org.example.project.ui.getPlatform
 
 data class TicTacToeState(
     val gridLength: Int,

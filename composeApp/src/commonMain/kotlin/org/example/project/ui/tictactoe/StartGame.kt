@@ -1,4 +1,4 @@
-package org.example.project.tictactoe
+package org.example.project.ui.tictactoe
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.example.project.navigation.Screen
+import org.example.project.ui.navigation.Screen
 
 @Composable
 fun StartGameScreen(
