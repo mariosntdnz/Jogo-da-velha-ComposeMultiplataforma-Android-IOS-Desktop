@@ -49,6 +49,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            api(libs.koin.composeViewModel)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
