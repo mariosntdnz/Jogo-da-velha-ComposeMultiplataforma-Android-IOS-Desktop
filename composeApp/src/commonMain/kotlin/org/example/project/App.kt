@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import org.example.project.di.viewModelModules
-import org.example.project.navigation.AppNavigation
+import org.example.project.presentation.navigation.AppNavigation
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
 import org.koin.core.KoinApplication

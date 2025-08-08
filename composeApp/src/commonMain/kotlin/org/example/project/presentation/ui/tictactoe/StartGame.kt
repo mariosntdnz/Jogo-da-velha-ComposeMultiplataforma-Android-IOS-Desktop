@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import org.example.project.navigation.Screen
+import org.example.project.presentation.navigation.Screen
 
 @Composable
 fun StartGameScreen(

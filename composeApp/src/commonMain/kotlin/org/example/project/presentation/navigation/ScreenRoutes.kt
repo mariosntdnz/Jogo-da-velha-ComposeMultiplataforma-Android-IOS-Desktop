@@ -1,4 +1,4 @@
-package org.example.project.navigation
+package org.example.project.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
