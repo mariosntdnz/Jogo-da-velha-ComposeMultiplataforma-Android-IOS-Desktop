@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
+import org.example.project.domain.models.TicTacToeItem
 import org.example.project.getPlatform
 import org.example.project.utils.clickableWithoutAnimation
-import org.example.project.presentation.viewmodels.TicTacToeItem
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -72,14 +72,14 @@ fun TicTacToeScreen(
             TicTacToeGrid(
                 qtyCells = state.gridLength,
                 list = state.currentGridList,
-                onClickItem = viewModel::play
+                onClickItem = viewModel::makeAMove
             )
 
         }
 
-        if (state.finishGame) {
+        if (state.endedGame) {
             FinishGamePopup(
-                finishGameText = state.finishGameText,
+                finishGameText = state.endedGameText,
                 visible = true,
                 onDismiss = navController::navigateUp
             )
