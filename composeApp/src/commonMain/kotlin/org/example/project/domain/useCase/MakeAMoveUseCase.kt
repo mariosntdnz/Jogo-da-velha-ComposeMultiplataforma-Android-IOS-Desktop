@@ -1,7 +1,7 @@
 package org.example.project.domain.useCase
 
+import org.example.project.core.listExtensions.copyReplacing
 import org.example.project.domain.models.TicTacToeItem
-import org.example.project.presentation.viewmodels.copyReplacing
 
 data class MadeAMoveResult(
     val grid: HashMap<Int, List<TicTacToeItem>>,
