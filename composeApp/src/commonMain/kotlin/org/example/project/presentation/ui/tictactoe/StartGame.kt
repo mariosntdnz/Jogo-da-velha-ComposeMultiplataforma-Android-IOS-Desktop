@@ -1,4 +1,4 @@
-package org.example.project.ui.tictactoe
+package org.example.project.presentation.ui.tictactoe
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

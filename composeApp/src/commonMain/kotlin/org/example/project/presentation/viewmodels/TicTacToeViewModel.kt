@@ -1,4 +1,4 @@
-package org.example.project.viewmodels
+package org.example.project.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

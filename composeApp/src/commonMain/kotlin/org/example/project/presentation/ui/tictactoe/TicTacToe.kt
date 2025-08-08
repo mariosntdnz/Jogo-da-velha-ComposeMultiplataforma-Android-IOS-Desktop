@@ -1,4 +1,4 @@
-package org.example.project.ui.tictactoe
+package org.example.project.presentation.ui.tictactoe
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -40,8 +40,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import org.example.project.getPlatform
 import org.example.project.utils.clickableWithoutAnimation
-import org.example.project.viewmodels.TicTacToeItem
-import org.example.project.viewmodels.TicTacToeViewModel
+import org.example.project.presentation.viewmodels.TicTacToeItem
+import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 
