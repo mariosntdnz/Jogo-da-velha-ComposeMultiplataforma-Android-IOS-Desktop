@@ -8,11 +8,13 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -40,8 +42,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import org.example.project.domain.models.TicTacToeItem
 import org.example.project.getPlatform
-import org.example.project.utils.clickableWithoutAnimation
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
+import org.example.project.utils.clickableWithoutAnimation
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -94,23 +96,29 @@ fun TicTacToeGrid(
     list: List<TicTacToeItem>,
     onClickItem: (Int, TicTacToeItem) -> Unit
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(qtyCells),
+    BoxWithConstraints(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color.Blue)
-        ,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        itemsIndexed(list) { index, item ->
-            TicTacToeGridItem(
-                ticTacToeItem = item,
-                onClickItem = {
-                    onClickItem(index, item)
-                }
-            )
+        val size = minOf(maxWidth, maxHeight)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(qtyCells),
+            modifier = Modifier
+                .size(size)
+                .background(Color.Blue)
+            ,
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            itemsIndexed(list) { index, item ->
+                TicTacToeGridItem(
+                    ticTacToeItem = item,
+                    onClickItem = {
+                        onClickItem(index, item)
+                    }
+                )
+            }
         }
     }
 }
@@ -140,7 +148,7 @@ fun TicTacToeGridItem(
         shape = RectangleShape,
         elevation = 0.dp
     ) {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
@@ -153,7 +161,7 @@ fun TicTacToeGridItem(
         ) {
             Text(
                 text = ticTacToeItem.label,
-                fontSize = 36.sp,
+                fontSize = (minWidth.value * 0.5f).sp,
                 modifier = Modifier
                     .alpha(alphaAnim.value)
             )
