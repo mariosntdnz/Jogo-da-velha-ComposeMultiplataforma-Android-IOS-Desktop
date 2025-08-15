@@ -6,13 +6,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.example.project.core.const.MAX_GRID_LENGTH
 import org.example.project.core.const.MIN_GRID_LENGTH
+import org.example.project.core.const.PLAYER1_DEFAULT_NAME
+import org.example.project.core.const.PLAYER2_DEFAULT_NAME
 
 data class StartGameState(
     val gridLength: Int = 3,
     val firstPlayerName: String = "",
     val secondPlayerName: String = "",
     val errorMsg: String = ""
-)
+) {
+    val firstPlayerNameOrDefault get() = firstPlayerName.ifEmpty { PLAYER1_DEFAULT_NAME }
+    val secondPlayerNameOrDefault get() = secondPlayerName.ifEmpty { PLAYER2_DEFAULT_NAME }
+}
 
 class StartGameViewModel: ViewModel() {
     private val _state = MutableStateFlow(StartGameState())

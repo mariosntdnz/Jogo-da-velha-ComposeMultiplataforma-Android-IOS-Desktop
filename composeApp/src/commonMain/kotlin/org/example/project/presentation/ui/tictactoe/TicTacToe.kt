@@ -45,14 +45,22 @@ import org.example.project.getPlatform
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.example.project.utils.clickableWithoutAnimation
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 @Composable
 fun TicTacToeScreen(
-    navController: NavController
+    navController: NavController,
+    gridLength: Int,
+    firstPlayerName: String,
+    secondPlayerName: String
 ) {
 
-    val viewModel = koinViewModel<TicTacToeViewModel>()
+    val viewModel = koinViewModel<TicTacToeViewModel>(
+        parameters = {
+            parametersOf(gridLength, firstPlayerName, secondPlayerName )
+        }
+    )
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(

@@ -10,6 +10,8 @@ import org.example.project.domain.useCase.MakeAMoveUseCase
 
 data class TicTacToeState(
     val gridLength: Int,
+    val firstPlayerName: String,
+    val secondPlayerName: String,
     val currentPlayer: Int,
     val endedGame: Boolean,
     val endedGameText: String,
@@ -19,18 +21,23 @@ data class TicTacToeState(
 }
 
 class TicTacToeViewModel(
+    gridLength: Int,
+    firstPlayerName: String,
+    secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
     private val checkGameEndUseCase: CheckGameEndUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(
         TicTacToeState(
-            gridLength = 3,
+            gridLength = gridLength,
             currentPlayer = 0,
+            firstPlayerName = firstPlayerName,
+            secondPlayerName = secondPlayerName,
             endedGame = false,
             endedGameText = "",
             currentGrid = hashMapOf(
-                *List(3) { row ->
-                    row to List(3) { TicTacToeItem() }
+                *List(gridLength) { row ->
+                    row to List(gridLength) { TicTacToeItem() }
                 }.toTypedArray()
             )
         )
@@ -68,6 +75,8 @@ class TicTacToeViewModel(
         _state.update { oldState ->
             val result = checkGameEndUseCase(
                 gridLength = oldState.gridLength,
+                firstPlayerName = oldState.firstPlayerName,
+                secondPlayerName = oldState.secondPlayerName,
                 currentPlayer = currentPlayer,
                 currentGrid = oldState.currentGrid,
                 gridGeneralList = oldState.currentGridList

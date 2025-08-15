@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import org.example.project.presentation.ui.tictactoe.StartGameScreen
 import org.example.project.presentation.ui.tictactoe.TicTacToeScreen
 
@@ -15,9 +16,13 @@ fun AppNavigation() {
         composable<Screen.StartGame> {
             StartGameScreen(navController = navController)
         }
-        composable<Screen.TicTacToe> {
+        composable<Screen.TicTacToe> { screen ->
+            val ticTacToe: Screen.TicTacToe = screen.toRoute()
             TicTacToeScreen(
-                navController = navController
+                navController = navController,
+                gridLength = ticTacToe.gridLength,
+                firstPlayerName = ticTacToe.firstPlayerName,
+                secondPlayerName = ticTacToe.secondPlayerName
             )
         }
     }

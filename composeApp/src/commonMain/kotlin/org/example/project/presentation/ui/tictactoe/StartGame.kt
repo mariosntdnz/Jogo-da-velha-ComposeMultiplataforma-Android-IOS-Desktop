@@ -109,7 +109,13 @@ fun StartGameScreen(
             ,
             shape = RoundedCornerShape(100),
             onClick = {
-                navController.navigate(Screen.TicTacToe)
+                navController.navigate(
+                    Screen.TicTacToe(
+                        gridLength = state.gridLength,
+                        firstPlayerName = state.firstPlayerNameOrDefault,
+                        secondPlayerName = state.secondPlayerNameOrDefault
+                    )
+                )
             }
         ) {
             Text(

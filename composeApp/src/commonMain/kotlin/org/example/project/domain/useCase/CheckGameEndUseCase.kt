@@ -10,6 +10,8 @@ data class EndGameResult(
 class CheckGameEndUseCase() {
     operator fun invoke(
         gridLength: Int,
+        firstPlayerName: String,
+        secondPlayerName: String,
         currentGrid: HashMap<Int, List<TicTacToeItem>>,
         gridGeneralList: List<TicTacToeItem>,
         currentPlayer: Int
@@ -45,7 +47,7 @@ class CheckGameEndUseCase() {
         val hasWinner = horizontallyResult || verticallyResult || diagonalResult
         val itsDraw = !hasWinner && gridGeneralList.none { it.label.isEmpty() }
         val endedGameText = when {
-            hasWinner -> "Player ${(currentPlayer % 2 ) + 1} Ganhou !!"
+            hasWinner -> "${if(((currentPlayer % 2 ) + 1) == 1) firstPlayerName else secondPlayerName} Ganhou !!"
             itsDraw -> "Deu velha !!"
             else -> ""
         }
