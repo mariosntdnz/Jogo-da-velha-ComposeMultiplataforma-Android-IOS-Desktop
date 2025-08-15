@@ -1,5 +1,7 @@
 package org.example.project.domain.useCase
 
+import org.example.project.core.const.PLAYER1_MARKER
+import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.core.listExtensions.copyReplacing
 import org.example.project.domain.models.TicTacToeItem
 
@@ -19,7 +21,7 @@ class MakeAMoveUseCase() {
         val row = index / gridLength
         val col = index % gridLength
         val newTicTacToeItem = TicTacToeItem(
-            label = if (currentPlayer % 2 == 0) "X" else "O",
+            label = if (currentPlayer % 2 == 0) PLAYER1_MARKER else PLAYER2_MARKER,
             isChecked = true
         )
 
