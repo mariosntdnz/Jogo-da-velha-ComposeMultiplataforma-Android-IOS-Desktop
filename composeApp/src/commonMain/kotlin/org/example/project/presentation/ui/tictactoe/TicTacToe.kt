@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -15,13 +16,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import org.example.project.domain.models.TicTacToeItem
-import org.example.project.getPlatform
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.example.project.utils.clickableWithoutAnimation
 import org.koin.compose.viewmodel.koinViewModel
@@ -72,13 +76,6 @@ fun TicTacToeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = getPlatform().name,
-                fontSize = 32.sp,
-                color = Color.Blue,
-                modifier = Modifier.clickableWithoutAnimation(onClick = navController::navigateUp)
-            )
-
             TicTacToeGrid(
                 qtyCells = state.gridLength,
                 list = state.currentGridList,
@@ -86,6 +83,18 @@ fun TicTacToeScreen(
             )
 
         }
+
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "",
+            tint = Color.Blue ,
+            modifier = Modifier
+                .statusBarsPadding()
+                .align(Alignment.TopStart)
+                .padding(start = 8.dp)
+                .size(36.dp)
+                .clickable(onClick = navController::navigateUp)
+        )
 
         if (state.endedGame) {
             FinishGamePopup(

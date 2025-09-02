@@ -63,8 +63,4 @@ class StartGameViewModel: ViewModel() {
             )
         }
     }
-
-    fun startGame() {
-
-    }
 }
