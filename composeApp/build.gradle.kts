@@ -56,6 +56,7 @@ kotlin {
             api(libs.koin.composeViewModel)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.kotlinx.serialization.json.v163)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
