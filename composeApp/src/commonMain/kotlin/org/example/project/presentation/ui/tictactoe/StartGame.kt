@@ -17,6 +17,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,18 @@ fun StartGameScreen(
 
     val viewModel = koinViewModel<StartGameViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val navigateToGame = remember(state.gridLength, state.firstPlayerNameOrDefault, state.secondPlayerNameOrDefault) {
+        {
+            navController.navigate(
+                Screen.TicTacToe(
+                    gridLength = state.gridLength,
+                    firstPlayerName = state.firstPlayerNameOrDefault,
+                    secondPlayerName = state.secondPlayerNameOrDefault
+                )
+            )
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -109,21 +122,32 @@ fun StartGameScreen(
             ,
             shape = RoundedCornerShape(100),
             onClick = {
-                navController.navigate(
-                    Screen.TicTacToe(
-                        gridLength = state.gridLength,
-                        firstPlayerName = state.firstPlayerNameOrDefault,
-                        secondPlayerName = state.secondPlayerNameOrDefault
-                    )
-                )
+                navigateToGame()
             }
         ) {
             Text(
-                text = "start",
+                text = state.startGameType.getLabel(),
                 fontSize = 24.sp,
-                color = Color.Red,
-                fontWeight = FontWeight.Bold
+                color = Color.Red
             )
+        }
+        if (state.hasNewGameType) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(100),
+                onClick = {
+                    navigateToGame()
+                    viewModel.onNewGameClick()
+                }
+            ) {
+                Text(
+                    text = state.newGameType.getLabel(),
+                    fontSize = 24.sp,
+                    color = Color.Red
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1f))
     }

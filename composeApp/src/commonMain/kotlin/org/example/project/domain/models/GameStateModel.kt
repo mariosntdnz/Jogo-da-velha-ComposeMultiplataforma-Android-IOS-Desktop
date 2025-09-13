@@ -12,6 +12,8 @@ data class GameState(
     val currentGrid: HashMap<Int, List<TicTacToeItem>>
 )
 
+val EMPTY_GAME_STATE = GameState(0, "","",0,false,"", hashMapOf())
+
 fun GameState.toTicTacToeState(): TicTacToeState = TicTacToeState(
     gridLength = this.gridLength,
     firstPlayerName = this.firstPlayerName,

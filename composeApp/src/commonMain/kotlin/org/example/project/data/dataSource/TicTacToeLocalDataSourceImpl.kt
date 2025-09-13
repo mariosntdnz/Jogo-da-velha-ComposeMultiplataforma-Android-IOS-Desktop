@@ -16,4 +16,8 @@ class TicTacToeLocalDataSourceImpl(
         return gameStateDao.getGameState(id)
     }
 
+    override suspend fun deleteGameState(game: GameStateEntity) {
+        gameStateDao.deleteGame(game)
+    }
+
 }

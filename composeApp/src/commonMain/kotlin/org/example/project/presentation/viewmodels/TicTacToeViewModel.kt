@@ -10,8 +10,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.example.project.domain.models.EMPTY_GAME_STATE
 import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.models.toGameState
+import org.example.project.domain.useCase.DeleteCurrentGameUseCase
 import org.example.project.domain.useCase.GetCurrentGameUseCase
 import org.example.project.domain.useCase.MakeAMoveUseCase
 
@@ -33,7 +35,8 @@ class TicTacToeViewModel(
     firstPlayerName: String,
     secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
-    private val getCurrentGame: GetCurrentGameUseCase
+    private val getCurrentGame: GetCurrentGameUseCase,
+    private val deleteCurrentGameUseCase: DeleteCurrentGameUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(
         TicTacToeState(
@@ -92,6 +95,12 @@ class TicTacToeViewModel(
                 index = index,
                 currentGameState = gameState
             )
+        }
+    }
+
+    fun finishGame() {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteCurrentGameUseCase(EMPTY_GAME_STATE)
         }
     }
 
