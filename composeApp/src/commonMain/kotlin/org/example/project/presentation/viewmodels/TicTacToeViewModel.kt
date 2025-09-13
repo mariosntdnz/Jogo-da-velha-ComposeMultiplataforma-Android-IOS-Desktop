@@ -1,12 +1,21 @@
 package org.example.project.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.example.project.domain.models.TicTacToeItem
-import org.example.project.domain.useCase.CheckGameEndUseCase
+import org.example.project.domain.models.toGameState
+import org.example.project.domain.useCase.GetCurrentGameUseCase
 import org.example.project.domain.useCase.MakeAMoveUseCase
+
+const val GAME_ID = 0
 
 data class TicTacToeState(
     val gridLength: Int,
@@ -15,17 +24,16 @@ data class TicTacToeState(
     val currentPlayer: Int,
     val endedGame: Boolean,
     val endedGameText: String,
-    val currentGrid: HashMap<Int, List<TicTacToeItem>>
-) {
-    val currentGridList get() = currentGrid.values.flatten()
-}
+    val currentGrid: HashMap<Int, List<TicTacToeItem>>,
+    val currentGridList: List<TicTacToeItem> = currentGrid.values.flatten()
+)
 
 class TicTacToeViewModel(
     gridLength: Int,
     firstPlayerName: String,
     secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
-    private val checkGameEndUseCase: CheckGameEndUseCase
+    private val getCurrentGame: GetCurrentGameUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(
         TicTacToeState(
@@ -44,49 +52,52 @@ class TicTacToeViewModel(
     )
     val state = _state.asStateFlow()
 
+    private var observeGameStateJob: Job? = null
+
+    init {
+        observeGameStateJob = viewModelScope.launch(Dispatchers.IO) {
+            getCurrentGame(GAME_ID).collect { newState ->
+                newState?.let {
+                    withContext(Dispatchers.Main) {
+                        _state.update { oldState ->
+                            oldState.copy(
+                                gridLength = newState.gridLength,
+                                firstPlayerName = newState.firstPlayerName,
+                                secondPlayerName = newState.secondPlayerName,
+                                currentPlayer = newState.currentPlayer,
+                                currentGrid = newState.currentGrid,
+                                endedGame = newState.endedGame,
+                                endedGameText = newState.endedGameText,
+                                currentGridList = newState.currentGrid.values
+                                    .flatten()
+                                    .map { it.copy() }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun makeAMove(
         index: Int,
         ticTacToeItem: TicTacToeItem
     ) {
         if (ticTacToeItem.isChecked || _state.value.endedGame) return
 
-        val currentPlayer = _state.value.currentPlayer
+        val gameState = _state.value.toGameState()
 
-        _state.update { oldState ->
-
-            val result = makeAMoveUseCase(
+        viewModelScope.launch(Dispatchers.IO) {
+            makeAMoveUseCase(
                 index = index,
-                gridLength = oldState.gridLength,
-                currentGrid = oldState.currentGrid,
-                currentPlayer = oldState.currentPlayer
-            )
-
-            oldState.copy(
-                currentGrid = result.grid,
-                currentPlayer = result.currentPlayer
-            )
-        }
-
-        verifyIfFinishGame(currentPlayer)
-
-    }
-
-    private fun verifyIfFinishGame(currentPlayer: Int) {
-        _state.update { oldState ->
-            val result = checkGameEndUseCase(
-                gridLength = oldState.gridLength,
-                firstPlayerName = oldState.firstPlayerName,
-                secondPlayerName = oldState.secondPlayerName,
-                currentPlayer = currentPlayer,
-                currentGrid = oldState.currentGrid,
-                gridGeneralList = oldState.currentGridList
-            )
-
-            oldState.copy(
-                endedGame = result.endGame,
-                endedGameText = result.endGameText
+                currentGameState = gameState
             )
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        observeGameStateJob?.cancel()
+        observeGameStateJob = null
+    }
 }

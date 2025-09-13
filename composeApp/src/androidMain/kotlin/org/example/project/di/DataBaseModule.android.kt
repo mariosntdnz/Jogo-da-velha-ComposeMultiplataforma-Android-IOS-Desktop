@@ -7,6 +7,6 @@ import org.koin.dsl.module
 
 actual val dataBasePlatformModule = module {
     single<AppDatabase> {
-        getRoomDatabase(getDatabaseBuilder(get()))
+        getRoomDatabase(getDatabaseBuilder(getKoin().get()))
     }
 }

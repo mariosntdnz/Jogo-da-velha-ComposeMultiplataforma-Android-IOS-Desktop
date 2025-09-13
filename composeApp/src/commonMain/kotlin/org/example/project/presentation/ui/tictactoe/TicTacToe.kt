@@ -147,10 +147,10 @@ fun TicTacToeGridItem(
 ) {
 
     val alphaAnim = remember { Animatable(0f) }
-    var click by remember { mutableStateOf(false) }
 
-    LaunchedEffect(click) {
-        if (click) {
+    LaunchedEffect(ticTacToeItem.label) {
+        if (ticTacToeItem.label.isNotEmpty()) {
+            alphaAnim.snapTo(0f)
             alphaAnim.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 2000)
@@ -171,7 +171,6 @@ fun TicTacToeGridItem(
                 .background(Color.White)
                 .clickableWithoutAnimation {
                     onClickItem()
-                    click = true
                 }
             ,
             contentAlignment = Alignment.Center

@@ -57,7 +57,7 @@ fun StartGameScreen(
         )
         Spacer(modifier = Modifier.weight(.75f))
         Text(
-            text = "Escolha o tamanho do jogo !",
+            text = "Escolha o tamanho do tabuleiro !",
             fontSize = 16.sp,
             color = Color.Blue
         )

@@ -3,20 +3,26 @@ package org.example.project.domain.useCase
 import org.example.project.core.const.PLAYER1_MARKER
 import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.core.listExtensions.copyReplacing
+import org.example.project.data.repository.CurrentGameStateRepository
+import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 
 data class MadeAMoveResult(
-    val grid: HashMap<Int, List<TicTacToeItem>>,
-    val currentPlayer: Int
+    val updated: Boolean = true,
+    val error: String = ""
 )
 
-class MakeAMoveUseCase() {
-    operator fun invoke(
+class MakeAMoveUseCase(
+    private val currentGameStateRepository: CurrentGameStateRepository
+) {
+    suspend operator fun invoke(
         index: Int,
-        gridLength: Int,
-        currentGrid: HashMap<Int, List<TicTacToeItem>>,
-        currentPlayer: Int
+        currentGameState: GameState
     ): MadeAMoveResult {
+
+        val gridLength = currentGameState.gridLength
+        val currentGrid = currentGameState.currentGrid
+        val currentPlayer = currentGameState.currentPlayer
 
         val row = index / gridLength
         val col = index % gridLength
@@ -26,10 +32,15 @@ class MakeAMoveUseCase() {
         )
 
         currentGrid[row] = currentGrid[row]?.copyReplacing(col, newTicTacToeItem) ?: List(gridLength) { TicTacToeItem() }
+        val newGameState = currentGameState.copy(
+            currentGrid = currentGrid
+        )
+
+        val updated = currentGameStateRepository.updateGame(newGameState)
 
         return MadeAMoveResult(
-            grid = currentGrid,
-            currentPlayer = currentPlayer + 1
+            updated = updated,
+            error = if (updated) "" else "Ocorreu um erro inesperado, repita a jogada"
         )
     }
 }

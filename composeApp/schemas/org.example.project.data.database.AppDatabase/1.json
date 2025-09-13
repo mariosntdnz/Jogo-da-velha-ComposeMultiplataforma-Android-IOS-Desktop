@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "299cbdea4af23852f6babbbab50221b0",
+    "identityHash": "cf92790c755e04d66472913aac979cc6",
     "entities": [
       {
         "tableName": "game",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `player1` TEXT NOT NULL, `player2` TEXT NOT NULL, `currentTurn` INTEGER NOT NULL, `currentGameGrid` TEXT NOT NULL, `endedGame` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `player1` TEXT NOT NULL, `player2` TEXT NOT NULL, `currentTurn` INTEGER NOT NULL, `currentGameGrid` TEXT NOT NULL, `endedGame` INTEGER NOT NULL, `endedGameText` TEXT NOT NULL, `gridLength` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -43,6 +43,18 @@
             "columnName": "endedGame",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "endedGameText",
+            "columnName": "endedGameText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gridLength",
+            "columnName": "gridLength",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -51,11 +63,41 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "TicTacToeEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `label` TEXT NOT NULL, `isChecked` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isChecked",
+            "columnName": "isChecked",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '299cbdea4af23852f6babbbab50221b0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cf92790c755e04d66472913aac979cc6')"
     ]
   }
 }

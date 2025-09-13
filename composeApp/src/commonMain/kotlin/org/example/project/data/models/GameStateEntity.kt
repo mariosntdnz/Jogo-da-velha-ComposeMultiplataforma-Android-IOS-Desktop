@@ -11,5 +11,7 @@ data class GameStateEntity(
     val player2: String = "",
     val currentTurn: Int = 0,
     val currentGameGrid: HashMap<Int, List<TicTacToeEntity>> = hashMapOf(),
-    val endedGame: Boolean = false
+    val endedGame: Boolean = false,
+    val endedGameText: String = "",
+    val gridLength: Int = 3
 )

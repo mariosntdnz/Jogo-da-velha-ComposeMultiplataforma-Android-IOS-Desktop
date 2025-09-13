@@ -11,8 +11,9 @@ import kotlinx.coroutines.IO
 import org.example.project.data.converters.TicTacToeConverter
 import org.example.project.data.dao.GameDao
 import org.example.project.data.models.GameStateEntity
+import org.example.project.data.models.TicTacToeEntity
 
-@Database(entities = [GameStateEntity::class], version = 1)
+@Database(entities = [GameStateEntity::class, TicTacToeEntity::class], version = 1)
 @TypeConverters(TicTacToeConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase: RoomDatabase() {
