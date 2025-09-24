@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 sealed class Screen(val route: String) {
     @Serializable data object StartGame: Screen("start_game")
     @Serializable data class TicTacToe(
+        val gameId: Long,
         val gridLength: Int,
         val firstPlayerName: String,
         val secondPlayerName: String

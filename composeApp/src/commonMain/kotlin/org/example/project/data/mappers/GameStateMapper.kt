@@ -15,7 +15,7 @@ class GameStateMapper: Mapper<GameState,  GameStateEntity> {
         } as HashMap<Int, List<TicTacToeEntity>>
 
         return GameStateEntity(
-            id = 0,
+            id = input.id,
             player1 = input.firstPlayerName,
             player2 = input.secondPlayerName,
             currentTurn = input.currentPlayer,
@@ -33,6 +33,7 @@ class GameStateMapper: Mapper<GameState,  GameStateEntity> {
         } as HashMap<Int, List<TicTacToeItem>>
 
         return GameState(
+            id = output.id,
             gridLength = output.gridLength,
             firstPlayerName = output.player1,
             secondPlayerName = output.player2,

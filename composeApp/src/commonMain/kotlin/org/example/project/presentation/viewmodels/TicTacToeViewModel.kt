@@ -17,9 +17,8 @@ import org.example.project.domain.useCase.DeleteCurrentGameUseCase
 import org.example.project.domain.useCase.GetCurrentGameUseCase
 import org.example.project.domain.useCase.MakeAMoveUseCase
 
-const val GAME_ID = 0
-
 data class TicTacToeState(
+    internal val id: Long = 0L,
     val gridLength: Int,
     val firstPlayerName: String,
     val secondPlayerName: String,
@@ -31,17 +30,19 @@ data class TicTacToeState(
 )
 
 class TicTacToeViewModel(
+    gameId: Long,
     gridLength: Int,
     firstPlayerName: String,
     secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
-    private val getCurrentGame: GetCurrentGameUseCase,
-    private val deleteCurrentGameUseCase: DeleteCurrentGameUseCase
+    private val getCurrentGame: GetCurrentGameUseCase
 ): ViewModel() {
+
     private val _state = MutableStateFlow(
         TicTacToeState(
+            id = gameId,
             gridLength = gridLength,
-            currentPlayer = 0,
+            currentPlayer = -1,
             firstPlayerName = firstPlayerName,
             secondPlayerName = secondPlayerName,
             endedGame = false,
@@ -59,11 +60,12 @@ class TicTacToeViewModel(
 
     init {
         observeGameStateJob = viewModelScope.launch(Dispatchers.IO) {
-            getCurrentGame(GAME_ID).collect { newState ->
+            getCurrentGame(gameId).collect { newState ->
                 newState?.let {
                     withContext(Dispatchers.Main) {
                         _state.update { oldState ->
                             oldState.copy(
+                                id = newState.id,
                                 gridLength = newState.gridLength,
                                 firstPlayerName = newState.firstPlayerName,
                                 secondPlayerName = newState.secondPlayerName,
@@ -95,12 +97,6 @@ class TicTacToeViewModel(
                 index = index,
                 currentGameState = gameState
             )
-        }
-    }
-
-    fun finishGame() {
-        viewModelScope.launch(Dispatchers.IO) {
-            deleteCurrentGameUseCase(EMPTY_GAME_STATE)
         }
     }
 

@@ -22,7 +22,8 @@ fun AppNavigation() {
                 navController = navController,
                 gridLength = ticTacToe.gridLength,
                 firstPlayerName = ticTacToe.firstPlayerName,
-                secondPlayerName = ticTacToe.secondPlayerName
+                secondPlayerName = ticTacToe.secondPlayerName,
+                gameId = ticTacToe.gameId
             )
         }
     }

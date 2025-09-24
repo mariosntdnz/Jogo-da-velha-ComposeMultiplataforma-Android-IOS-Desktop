@@ -14,10 +14,13 @@ import org.example.project.core.const.MAX_GRID_LENGTH
 import org.example.project.core.const.MIN_GRID_LENGTH
 import org.example.project.core.const.PLAYER1_DEFAULT_NAME
 import org.example.project.core.const.PLAYER2_DEFAULT_NAME
+import org.example.project.data.repository.UPSERT_ERROR
 import org.example.project.domain.models.EMPTY_GAME_STATE
 import org.example.project.domain.models.GameState
 import org.example.project.domain.useCase.DeleteCurrentGameUseCase
 import org.example.project.domain.useCase.GetCurrentGameUseCase
+import org.example.project.domain.useCase.GetOnGoingGamesUseCase
+import org.example.project.domain.useCase.UpsertGameUseCase
 
 enum class StartGameType {
     Start,
@@ -28,7 +31,7 @@ enum class StartGameType {
     fun getLabel(): String {
         return when(this) {
             Start -> "Começar"
-            Restart -> "Continuar jogo atual"
+            Restart -> "Continuar jogo existente"
             Delete -> "Começar um novo jogo"
             None -> ""
         }
@@ -36,12 +39,14 @@ enum class StartGameType {
 }
 
 data class StartGameState(
+    internal val gameId: Long = 0L,
     val gridLength: Int = 3,
     val firstPlayerName: String = "",
     val secondPlayerName: String = "",
     val errorMsg: String = "",
     val startGameType: StartGameType = StartGameType.None,
-    val newGameType: StartGameType = StartGameType.None
+    val hasStartGameType: Boolean = false,
+    val newGameType: StartGameType = StartGameType.Delete
 ) {
     val firstPlayerNameOrDefault get() = firstPlayerName.ifEmpty { PLAYER1_DEFAULT_NAME }
     val secondPlayerNameOrDefault get() = secondPlayerName.ifEmpty { PLAYER2_DEFAULT_NAME }
@@ -49,8 +54,8 @@ data class StartGameState(
 }
 
 class StartGameViewModel(
-    private val getCurrentGameUseCase: GetCurrentGameUseCase,
-    private val deleteCurrentGameUseCase: DeleteCurrentGameUseCase
+    private val upsertGameUseCase: UpsertGameUseCase,
+    private val getOnGoingGamesUseCase: GetOnGoingGamesUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(StartGameState())
     val state = _state.asStateFlow()
@@ -59,23 +64,18 @@ class StartGameViewModel(
 
     init {
         observeGameStateJob = viewModelScope.launch(Dispatchers.IO) {
-            getCurrentGameUseCase(GAME_ID).collect { newState ->
+            getOnGoingGamesUseCase().collect { newState ->
                 withContext(Dispatchers.Main) {
                     _state.update { oldState ->
                         val startGameType =
-                            if (newState?.currentGrid?.values?.flatten()?.any { it.isChecked } == true) {
-                                StartGameType.Restart
-                            } else {
+                            if (newState.isEmpty()) {
                                 StartGameType.Start
+                            } else {
+                                StartGameType.Restart
                             }
-                        val newGameType = if (startGameType == StartGameType.Restart) {
-                            StartGameType.Delete
-                        } else {
-                            StartGameType.None
-                        }
                         oldState.copy(
                             startGameType = startGameType,
-                            newGameType = newGameType
+                            hasStartGameType = startGameType == StartGameType.Restart
                         )
                     }
                 }
@@ -125,9 +125,26 @@ class StartGameViewModel(
         }
     }
 
-    fun onNewGameClick() {
+    fun onNewGameClick(onFinish: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteCurrentGameUseCase(EMPTY_GAME_STATE)
+            val state = _state.value
+            val id = upsertGameUseCase(
+                game = EMPTY_GAME_STATE.copy(
+                    gridLength = state.gridLength,
+                    firstPlayerName = state.firstPlayerNameOrDefault,
+                    secondPlayerName = state.secondPlayerNameOrDefault
+                )
+            )
+            if (id != UPSERT_ERROR) {
+                withContext(Dispatchers.Main) {
+                    _state.update {
+                        it.copy(
+                            gameId = id
+                        )
+                    }
+                    onFinish(id)
+                }
+            }
         }
     }
 }

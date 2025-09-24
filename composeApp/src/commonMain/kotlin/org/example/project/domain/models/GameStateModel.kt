@@ -1,8 +1,10 @@
 package org.example.project.domain.models
 
+import org.example.project.data.models.TicTacToeEntity
 import org.example.project.presentation.viewmodels.TicTacToeState
 
 data class GameState(
+    val id: Long = 0L,
     val gridLength: Int,
     val firstPlayerName: String,
     val secondPlayerName: String,
@@ -12,9 +14,14 @@ data class GameState(
     val currentGrid: HashMap<Int, List<TicTacToeItem>>
 )
 
-val EMPTY_GAME_STATE = GameState(0, "","",0,false,"", hashMapOf())
+val EMPTY_GAME_STATE = GameState(0,0, "","",-1,false,"", hashMapOf(
+    *List(3) { row ->
+        row to List(3) { TicTacToeItem(0) }
+    }.toTypedArray()
+))
 
 fun GameState.toTicTacToeState(): TicTacToeState = TicTacToeState(
+    id = this.id,
     gridLength = this.gridLength,
     firstPlayerName = this.firstPlayerName,
     secondPlayerName = this.secondPlayerName,
@@ -27,6 +34,7 @@ fun GameState.toTicTacToeState(): TicTacToeState = TicTacToeState(
 )
 
 fun TicTacToeState.toGameState(): GameState = GameState(
+    id = this.id,
     gridLength = this.gridLength,
     firstPlayerName = this.firstPlayerName,
     secondPlayerName = this.secondPlayerName,

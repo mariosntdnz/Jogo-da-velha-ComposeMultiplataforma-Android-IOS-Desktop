@@ -9,7 +9,7 @@ class GetCurrentGameUseCase(
     private val currentGameStateRepository: CurrentGameStateRepository,
     private val checkGameEndUseCase: CheckGameEndUseCase
 ) {
-    operator fun invoke(id: Int): Flow<GameState?> {
+    operator fun invoke(id: Long): Flow<GameState?> {
         return currentGameStateRepository.getGameState(id).map { gameResult ->
             gameResult?.let { game ->
                 val result = checkGameEndUseCase(game)

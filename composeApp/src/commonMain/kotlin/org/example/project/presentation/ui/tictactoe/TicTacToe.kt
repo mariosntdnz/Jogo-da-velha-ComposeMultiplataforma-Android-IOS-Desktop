@@ -55,6 +55,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun TicTacToeScreen(
     navController: NavController,
+    gameId: Long,
     gridLength: Int,
     firstPlayerName: String,
     secondPlayerName: String
@@ -62,7 +63,7 @@ fun TicTacToeScreen(
 
     val viewModel = koinViewModel<TicTacToeViewModel>(
         parameters = {
-            parametersOf(gridLength, firstPlayerName, secondPlayerName )
+            parametersOf(gameId, gridLength, firstPlayerName, secondPlayerName )
         }
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -102,7 +103,6 @@ fun TicTacToeScreen(
                 visible = true,
                 onDismiss = {
                     navController.navigateUp()
-                    viewModel.finishGame()
                 }
             )
         }

@@ -4,6 +4,7 @@ import org.example.project.core.const.PLAYER1_MARKER
 import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.core.listExtensions.copyReplacing
 import org.example.project.data.repository.CurrentGameStateRepository
+import org.example.project.data.repository.UPSERT_ERROR
 import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 
@@ -13,7 +14,7 @@ data class MadeAMoveResult(
 )
 
 class MakeAMoveUseCase(
-    private val currentGameStateRepository: CurrentGameStateRepository
+    private val upsertGameUseCase: UpsertGameUseCase
 ) {
     suspend operator fun invoke(
         index: Int,
@@ -36,7 +37,7 @@ class MakeAMoveUseCase(
             currentGrid = currentGrid
         )
 
-        val updated = currentGameStateRepository.updateGame(newGameState)
+        val updated = upsertGameUseCase(newGameState) != UPSERT_ERROR
 
         return MadeAMoveResult(
             updated = updated,

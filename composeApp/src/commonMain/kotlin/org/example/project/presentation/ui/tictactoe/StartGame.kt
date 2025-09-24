@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,18 +39,6 @@ fun StartGameScreen(
 
     val viewModel = koinViewModel<StartGameViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val navigateToGame = remember(state.gridLength, state.firstPlayerNameOrDefault, state.secondPlayerNameOrDefault) {
-        {
-            navController.navigate(
-                Screen.TicTacToe(
-                    gridLength = state.gridLength,
-                    firstPlayerName = state.firstPlayerNameOrDefault,
-                    secondPlayerName = state.secondPlayerNameOrDefault
-                )
-            )
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -116,20 +105,22 @@ fun StartGameScreen(
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.weight(.5f))
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-            ,
-            shape = RoundedCornerShape(100),
-            onClick = {
-                navigateToGame()
+        if (state.hasStartGameType) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                ,
+                shape = RoundedCornerShape(100),
+                onClick = {
+
+                }
+            ) {
+                Text(
+                    text = state.startGameType.getLabel(),
+                    fontSize = 24.sp,
+                    color = Color.Red
+                )
             }
-        ) {
-            Text(
-                text = state.startGameType.getLabel(),
-                fontSize = 24.sp,
-                color = Color.Red
-            )
         }
         if (state.hasNewGameType) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -138,8 +129,16 @@ fun StartGameScreen(
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(100),
                 onClick = {
-                    navigateToGame()
-                    viewModel.onNewGameClick()
+                    viewModel.onNewGameClick {
+                        navController.navigate(
+                            Screen.TicTacToe(
+                                gridLength = state.gridLength,
+                                firstPlayerName = state.firstPlayerNameOrDefault,
+                                secondPlayerName = state.secondPlayerNameOrDefault,
+                                gameId = it
+                            )
+                        )
+                    }
                 }
             ) {
                 Text(

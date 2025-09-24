@@ -11,11 +11,14 @@ import org.example.project.data.models.GameStateEntity
 interface GameDao {
 
     @Upsert
-    suspend fun updateGame(game: GameStateEntity)
+    suspend fun updateGame(game: GameStateEntity): Long
 
     @Delete
     suspend fun deleteGame(game: GameStateEntity)
 
     @Query("select * from game where id = :id")
-    fun getGameState(id: Int): Flow<GameStateEntity?>
+    fun getGameState(id: Long): Flow<GameStateEntity?>
+
+    @Query("select * from game")
+    fun getAllGameState(): Flow<List<GameStateEntity>?>
 }
