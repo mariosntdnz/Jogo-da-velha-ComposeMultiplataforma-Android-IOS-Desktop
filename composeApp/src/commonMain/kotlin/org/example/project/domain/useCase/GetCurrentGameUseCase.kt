@@ -2,7 +2,7 @@ package org.example.project.domain.useCase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.example.project.data.repository.CurrentGameStateRepository
+import org.example.project.data.repository.currentGame.CurrentGameStateRepository
 import org.example.project.domain.models.GameState
 
 class GetCurrentGameUseCase(

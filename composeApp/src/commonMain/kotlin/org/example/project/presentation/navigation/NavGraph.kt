@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import org.example.project.presentation.ui.history.HistoryScreen
 import org.example.project.presentation.ui.tictactoe.StartGameScreen
 import org.example.project.presentation.ui.tictactoe.TicTacToeScreen
 
@@ -24,6 +25,13 @@ fun AppNavigation() {
                 firstPlayerName = ticTacToe.firstPlayerName,
                 secondPlayerName = ticTacToe.secondPlayerName,
                 gameId = ticTacToe.gameId
+            )
+        }
+        composable<Screen.History> { screen ->
+            val history: Screen.History = screen.toRoute()
+            HistoryScreen(
+                navController = navController,
+                filterType = history.filterType
             )
         }
     }

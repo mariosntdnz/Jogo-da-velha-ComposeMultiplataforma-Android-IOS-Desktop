@@ -3,8 +3,7 @@ package org.example.project.domain.useCase
 import org.example.project.core.const.PLAYER1_MARKER
 import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.core.listExtensions.copyReplacing
-import org.example.project.data.repository.CurrentGameStateRepository
-import org.example.project.data.repository.UPSERT_ERROR
+import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 

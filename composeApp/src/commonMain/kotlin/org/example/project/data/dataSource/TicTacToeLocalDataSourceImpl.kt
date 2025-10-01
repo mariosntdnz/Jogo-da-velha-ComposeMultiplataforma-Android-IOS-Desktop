@@ -15,7 +15,7 @@ class TicTacToeLocalDataSourceImpl(
         return gameStateDao.getGameState(id)
     }
 
-    override fun getAllGameState(): Flow<List<GameStateEntity>?> {
+    override fun getAllGameState(): Flow<List<GameStateEntity>> {
         return gameStateDao.getAllGameState()
     }
 

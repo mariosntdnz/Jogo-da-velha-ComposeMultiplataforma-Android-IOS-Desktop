@@ -7,7 +7,7 @@ import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.models.toEntity
 import org.example.project.domain.models.toItem
 
-class GameStateMapper: Mapper<GameState,  GameStateEntity> {
+object GameStateMapper: Mapper<GameState,  GameStateEntity> {
     override fun map(input: GameState): GameStateEntity {
 
         val mappedGrid: HashMap<Int, List<TicTacToeEntity>> = input.currentGrid.mapValues { entry ->

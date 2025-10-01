@@ -1,4 +1,4 @@
-package org.example.project.data.repository
+package org.example.project.data.repository.currentGame
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,12 +27,6 @@ class CurrentGameStateRepositoryImpl(
             it?.let {
                 gameStateMapper.reverse(it)
             }
-        }
-    }
-
-    override fun getAllGamesState(): Flow<List<GameState>> {
-        return localDataSource.getAllGameState().map { list ->
-            list?.map { gameStateMapper.reverse(it) } ?: emptyList()
         }
     }
 

@@ -14,12 +14,10 @@ import org.example.project.core.const.MAX_GRID_LENGTH
 import org.example.project.core.const.MIN_GRID_LENGTH
 import org.example.project.core.const.PLAYER1_DEFAULT_NAME
 import org.example.project.core.const.PLAYER2_DEFAULT_NAME
-import org.example.project.data.repository.UPSERT_ERROR
+import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.EMPTY_GAME_STATE
-import org.example.project.domain.models.GameState
-import org.example.project.domain.useCase.DeleteCurrentGameUseCase
-import org.example.project.domain.useCase.GetCurrentGameUseCase
-import org.example.project.domain.useCase.GetOnGoingGamesUseCase
+import org.example.project.domain.useCase.GetHistoryUseCase
+import org.example.project.domain.useCase.HistoryFilterType
 import org.example.project.domain.useCase.UpsertGameUseCase
 
 enum class StartGameType {
@@ -55,7 +53,7 @@ data class StartGameState(
 
 class StartGameViewModel(
     private val upsertGameUseCase: UpsertGameUseCase,
-    private val getOnGoingGamesUseCase: GetOnGoingGamesUseCase
+    private val getHistoryUseCase: GetHistoryUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(StartGameState())
     val state = _state.asStateFlow()
@@ -64,7 +62,7 @@ class StartGameViewModel(
 
     init {
         observeGameStateJob = viewModelScope.launch(Dispatchers.IO) {
-            getOnGoingGamesUseCase().collect { newState ->
+            getHistoryUseCase(HistoryFilterType.OngoingGames).collect { newState ->
                 withContext(Dispatchers.Main) {
                     _state.update { oldState ->
                         val startGameType =

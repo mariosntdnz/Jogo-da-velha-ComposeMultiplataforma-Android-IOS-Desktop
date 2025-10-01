@@ -20,5 +20,5 @@ interface GameDao {
     fun getGameState(id: Long): Flow<GameStateEntity?>
 
     @Query("select * from game")
-    fun getAllGameState(): Flow<List<GameStateEntity>?>
+    fun getAllGameState(): Flow<List<GameStateEntity>>
 }
