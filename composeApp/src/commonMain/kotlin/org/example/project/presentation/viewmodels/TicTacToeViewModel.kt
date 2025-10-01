@@ -16,6 +16,7 @@ import org.example.project.domain.models.toGameState
 import org.example.project.domain.useCase.DeleteCurrentGameUseCase
 import org.example.project.domain.useCase.GetCurrentGameUseCase
 import org.example.project.domain.useCase.MakeAMoveUseCase
+import org.example.project.domain.useCase.UpsertGameUseCase
 
 data class TicTacToeState(
     internal val id: Long = 0L,
@@ -35,7 +36,8 @@ class TicTacToeViewModel(
     firstPlayerName: String,
     secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
-    private val getCurrentGame: GetCurrentGameUseCase
+    private val getCurrentGame: GetCurrentGameUseCase,
+    private val upsertGameUseCase: UpsertGameUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -97,6 +99,15 @@ class TicTacToeViewModel(
                 index = index,
                 currentGameState = gameState
             )
+        }
+    }
+
+    fun onFinishGame(
+        onDone: () -> Unit
+    ) {
+        viewModelScope.launch {
+            upsertGameUseCase(_state.value.toGameState())
+            onDone()
         }
     }
 

@@ -102,7 +102,9 @@ fun TicTacToeScreen(
                 finishGameText = state.endedGameText,
                 visible = true,
                 onDismiss = {
-                    navController.navigateUp()
+                    viewModel.onFinishGame {
+                        navController.navigateUp()
+                    }
                 }
             )
         }
