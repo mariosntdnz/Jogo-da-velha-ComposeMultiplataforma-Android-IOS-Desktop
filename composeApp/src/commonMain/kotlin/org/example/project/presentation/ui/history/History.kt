@@ -1,6 +1,7 @@
 package org.example.project.presentation.ui.history
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -80,7 +81,19 @@ fun HistoryScreen(
             }
             else -> {
                 DefaultHistoryScreen(
-                    list = state.historyItems
+                    list = state.historyItems,
+                    onClick = { game ->
+                        if (game.historyEntryType != HistoryEntryType.Finished) {
+                            navController.navigate(
+                                Screen.TicTacToe(
+                                    gameId = game.gameId,
+                                    gridLength = game.gridLength,
+                                    firstPlayerName = game.player1Name,
+                                    secondPlayerName = game.player2Name
+                                )
+                            )
+                        }
+                    }
                 )
             }
         }
@@ -89,14 +102,16 @@ fun HistoryScreen(
 
 @Composable
 fun DefaultHistoryScreen(
-    list: List<HistoryEntry>
+    list: List<HistoryEntry>,
+    onClick: (HistoryEntry) -> Unit
 ) {
-    HistoryList(list)
+    HistoryList(list, onClick)
 }
 
 @Composable
 fun HistoryList(
-    list: List<HistoryEntry>
+    list: List<HistoryEntry>,
+    onClick: (HistoryEntry) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -108,7 +123,10 @@ fun HistoryList(
             key = { it.gameId }
         ) { historyItem ->
             HistoryItem(
-                historyItem = historyItem
+                historyItem = historyItem,
+                onClick = {
+                    onClick(historyItem)
+                }
             )
             Spacer(Modifier.height(16.dp))
         }
@@ -117,7 +135,8 @@ fun HistoryList(
 
 @Composable
 fun HistoryItem(
-    historyItem: HistoryEntry
+    historyItem: HistoryEntry,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -129,6 +148,7 @@ fun HistoryItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .clickable(onClick = onClick)
         ) {
             Text(
                 modifier = Modifier
@@ -150,7 +170,7 @@ fun HistoryItem(
                 )
                 Spacer(Modifier.weight(1f))
                 SimpleTextCard(
-                    text = historyItem.gridLength,
+                    text = historyItem.gridLengthLabel,
                     backgroundColor = Color.Green.copy(alpha = .25f),
                     textColor = Color.Black
                 )

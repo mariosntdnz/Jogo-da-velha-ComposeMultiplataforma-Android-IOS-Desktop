@@ -37,7 +37,9 @@ class GetHistoryUseCase(
                     currentPlayer = if (gameState.currentPlayer % 2 != 0) gameState.firstPlayerName else gameState.secondPlayerName,
                     player1Name = gameState.firstPlayerName,
                     player2Name = gameState.secondPlayerName,
-                    gridLength = "${gameState.gridLength} x ${gameState.gridLength}"
+                    gridLength = gameState.gridLength,
+                    gridLengthLabel = "${gameState.gridLength} x ${gameState.gridLength}",
+                    gameHistoryTitle = "${gameState.firstPlayerName} x ${gameState.secondPlayerName}"
                 )
             }
         }

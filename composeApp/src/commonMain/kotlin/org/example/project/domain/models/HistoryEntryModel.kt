@@ -9,7 +9,7 @@ data class HistoryEntry(
     val currentPlayer: String,
     val player1Name: String,
     val player2Name: String,
-    val gridLength: String
-) {
-    val gameHistoryTitle get() = "$player1Name x $player2Name"
-}
+    val gridLength: Int,
+    val gridLengthLabel: String,
+    val gameHistoryTitle: String
+)
