@@ -33,8 +33,8 @@ class GetHistoryUseCase(
                 HistoryEntry(
                     gameId = gameState.id,
                     historyEntryType = getHistoryTypeFromEndGame(gameState.endedGame),
-                    winnerName = "Mockado",
-                    currentPlayer = "Mockado",
+                    winnerName = if (gameState.currentPlayer % 2 == 0) gameState.firstPlayerName else gameState.secondPlayerName,
+                    currentPlayer = if (gameState.currentPlayer % 2 != 0) gameState.firstPlayerName else gameState.secondPlayerName,
                     player1Name = gameState.firstPlayerName,
                     player2Name = gameState.secondPlayerName,
                     gridLength = "${gameState.gridLength} x ${gameState.gridLength}"
