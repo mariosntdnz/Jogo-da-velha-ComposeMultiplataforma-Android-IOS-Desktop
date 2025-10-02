@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5821eccc88f689816f5473a75bcc0e5e",
+    "identityHash": "cbb4accb5a2d49227e3c181e3f2fe357",
     "entities": [
       {
         "tableName": "game",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player1` TEXT NOT NULL, `player2` TEXT NOT NULL, `currentTurn` INTEGER NOT NULL, `currentGameGrid` TEXT NOT NULL, `endedGame` INTEGER NOT NULL, `endedGameText` TEXT NOT NULL, `gridLength` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `player1` TEXT NOT NULL, `player2` TEXT NOT NULL, `currentTurn` TEXT NOT NULL, `gridLength` INTEGER NOT NULL, `currentGameGrid` TEXT NOT NULL, `gameStateType` TEXT NOT NULL, `endedGameText` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -29,6 +29,12 @@
           {
             "fieldPath": "currentTurn",
             "columnName": "currentTurn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gridLength",
+            "columnName": "gridLength",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -39,21 +45,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "endedGame",
-            "columnName": "endedGame",
-            "affinity": "INTEGER",
+            "fieldPath": "gameStateType",
+            "columnName": "gameStateType",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "endedGameText",
             "columnName": "endedGameText",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "gridLength",
-            "columnName": "gridLength",
-            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -97,7 +97,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5821eccc88f689816f5473a75bcc0e5e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cbb4accb5a2d49227e3c181e3f2fe357')"
     ]
   }
 }

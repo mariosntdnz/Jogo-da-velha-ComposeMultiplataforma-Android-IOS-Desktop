@@ -2,6 +2,7 @@ package org.example.project.domain.useCase
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.example.project.core.const.DRAW_LABEL
 import org.example.project.data.repository.allGames.AllGamesRepository
 import org.example.project.domain.models.HistoryEntry
 import org.example.project.presentation.viewmodels.HistoryEntryType
@@ -26,20 +27,20 @@ class GetHistoryUseCase(
     ): Flow<List<HistoryEntry>> {
         return repository.getAllGamesState().map { allGames ->
             val filteredGames = when(filterType) {
-                HistoryFilterType.OngoingGames -> allGames.filter { !it.endedGame }
+                HistoryFilterType.OngoingGames -> allGames.filter { !it.gameStateType.isFinished() }
                 HistoryFilterType.None -> allGames
             }
             filteredGames.map {  gameState ->
                 HistoryEntry(
                     gameId = gameState.id,
-                    historyEntryType = getHistoryTypeFromEndGame(gameState.endedGame),
-                    winnerName = if (gameState.currentPlayer % 2 == 0) gameState.firstPlayerName else gameState.secondPlayerName,
-                    currentPlayer = if (gameState.currentPlayer % 2 != 0) gameState.firstPlayerName else gameState.secondPlayerName,
-                    player1Name = gameState.firstPlayerName,
-                    player2Name = gameState.secondPlayerName,
+                    historyEntryType = getHistoryTypeFromEndGame(gameState.gameStateType.isFinished()),
+                    winnerName = if (gameState.gameStateType != GameStateType.Draw) gameState.currentPlayer.name else DRAW_LABEL,
+                    currentPlayer = gameState.currentPlayer,
+                    player1 = gameState.firstPlayer,
+                    player2 = gameState.secondPlayer,
                     gridLength = gameState.gridLength,
                     gridLengthLabel = "${gameState.gridLength} x ${gameState.gridLength}",
-                    gameHistoryTitle = "${gameState.firstPlayerName} x ${gameState.secondPlayerName}"
+                    gameHistoryTitle = "${gameState.firstPlayer.name} x ${gameState.secondPlayer.name}"
                 )
             }
         }

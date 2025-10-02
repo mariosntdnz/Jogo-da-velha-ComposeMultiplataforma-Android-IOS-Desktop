@@ -11,7 +11,8 @@ import org.koin.dsl.module
 val useCaseModules = module {
     factory {
         MakeAMoveUseCase(
-            upsertGameUseCase = get()
+            upsertGameUseCase = get(),
+            checkGameEndUseCase = get()
         )
     }
     factory {
@@ -19,8 +20,7 @@ val useCaseModules = module {
     }
     factory {
         GetCurrentGameUseCase(
-            currentGameStateRepository = get(),
-            checkGameEndUseCase = get()
+            currentGameStateRepository = get()
         )
     }
 

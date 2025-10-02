@@ -1,7 +1,5 @@
 package org.example.project.domain.useCase
 
-import org.example.project.core.const.PLAYER1_MARKER
-import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.core.listExtensions.copyReplacing
 import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.GameState
@@ -13,7 +11,8 @@ data class MadeAMoveResult(
 )
 
 class MakeAMoveUseCase(
-    private val upsertGameUseCase: UpsertGameUseCase
+    private val upsertGameUseCase: UpsertGameUseCase,
+    private val checkGameEndUseCase: CheckGameEndUseCase
 ) {
     suspend operator fun invoke(
         index: Int,
@@ -27,13 +26,22 @@ class MakeAMoveUseCase(
         val row = index / gridLength
         val col = index % gridLength
         val newTicTacToeItem = TicTacToeItem(
-            label = if (currentPlayer % 2 == 0) PLAYER1_MARKER else PLAYER2_MARKER,
+            label = currentPlayer.marker,
             isChecked = true
         )
 
         currentGrid[row] = currentGrid[row]?.copyReplacing(col, newTicTacToeItem) ?: List(gridLength) { TicTacToeItem() }
+        val result = checkGameEndUseCase(currentGameState)
         val newGameState = currentGameState.copy(
-            currentGrid = currentGrid
+            currentGrid = currentGrid,
+            currentPlayer = if (!result.gameStateType.isFinished()) {
+                if (currentPlayer == currentGameState.firstPlayer) currentGameState.secondPlayer else currentGameState.firstPlayer
+            } else {
+                currentPlayer
+            },
+            gameStateType = result.gameStateType,
+            endedGameText = result.endGameText
+
         )
 
         val updated = upsertGameUseCase(newGameState) != UPSERT_ERROR

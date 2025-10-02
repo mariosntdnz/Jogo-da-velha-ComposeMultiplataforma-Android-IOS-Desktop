@@ -6,6 +6,7 @@ import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.models.toEntity
 import org.example.project.domain.models.toItem
+import org.example.project.domain.models.toModel
 
 object GameStateMapper: Mapper<GameState,  GameStateEntity> {
     override fun map(input: GameState): GameStateEntity {
@@ -16,11 +17,11 @@ object GameStateMapper: Mapper<GameState,  GameStateEntity> {
 
         return GameStateEntity(
             id = input.id,
-            player1 = input.firstPlayerName,
-            player2 = input.secondPlayerName,
-            currentTurn = input.currentPlayer,
+            player1 = input.firstPlayer.toEntity(),
+            player2 = input.secondPlayer.toEntity(),
+            currentTurn = input.currentPlayer.toEntity(),
             currentGameGrid = mappedGrid,
-            endedGame = input.endedGame,
+            gameStateType = input.gameStateType,
             endedGameText = input.endedGameText,
             gridLength = input.gridLength
         )
@@ -35,10 +36,10 @@ object GameStateMapper: Mapper<GameState,  GameStateEntity> {
         return GameState(
             id = output.id,
             gridLength = output.gridLength,
-            firstPlayerName = output.player1,
-            secondPlayerName = output.player2,
-            currentPlayer = output.currentTurn,
-            endedGame = output.endedGame,
+            firstPlayer = output.player1.toModel(),
+            secondPlayer = output.player2.toModel(),
+            currentPlayer = output.currentTurn.toModel(),
+            gameStateType = output.gameStateType,
             endedGameText = output.endedGameText,
             currentGrid = mappedGrid
         )

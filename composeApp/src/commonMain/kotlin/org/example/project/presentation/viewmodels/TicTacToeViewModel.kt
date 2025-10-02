@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.example.project.domain.models.EMPTY_GAME_STATE
+import org.example.project.domain.models.Player
 import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.models.toGameState
-import org.example.project.domain.useCase.DeleteCurrentGameUseCase
+import org.example.project.domain.useCase.GameStateType
 import org.example.project.domain.useCase.GetCurrentGameUseCase
 import org.example.project.domain.useCase.MakeAMoveUseCase
 import org.example.project.domain.useCase.UpsertGameUseCase
@@ -21,10 +21,10 @@ import org.example.project.domain.useCase.UpsertGameUseCase
 data class TicTacToeState(
     internal val id: Long = 0L,
     val gridLength: Int,
-    val firstPlayerName: String,
-    val secondPlayerName: String,
-    val currentPlayer: Int,
-    val endedGame: Boolean,
+    val firstPlayer: Player,
+    val secondPlayer: Player,
+    val currentPlayer: Player,
+    val gameStateType: GameStateType,
     val endedGameText: String,
     val currentGrid: HashMap<Int, List<TicTacToeItem>>,
     val currentGridList: List<TicTacToeItem> = currentGrid.values.flatten()
@@ -33,8 +33,6 @@ data class TicTacToeState(
 class TicTacToeViewModel(
     gameId: Long,
     gridLength: Int,
-    firstPlayerName: String,
-    secondPlayerName: String,
     private val makeAMoveUseCase: MakeAMoveUseCase,
     private val getCurrentGame: GetCurrentGameUseCase,
     private val upsertGameUseCase: UpsertGameUseCase
@@ -44,10 +42,10 @@ class TicTacToeViewModel(
         TicTacToeState(
             id = gameId,
             gridLength = gridLength,
-            currentPlayer = -1,
-            firstPlayerName = firstPlayerName,
-            secondPlayerName = secondPlayerName,
-            endedGame = false,
+            currentPlayer = Player(),
+            firstPlayer = Player(),
+            secondPlayer = Player(),
+            gameStateType = GameStateType.Ongoing,
             endedGameText = "",
             currentGrid = hashMapOf(
                 *List(gridLength) { row ->
@@ -69,11 +67,11 @@ class TicTacToeViewModel(
                             oldState.copy(
                                 id = newState.id,
                                 gridLength = newState.gridLength,
-                                firstPlayerName = newState.firstPlayerName,
-                                secondPlayerName = newState.secondPlayerName,
+                                firstPlayer = newState.firstPlayer,
+                                secondPlayer = newState.secondPlayer,
                                 currentPlayer = newState.currentPlayer,
                                 currentGrid = newState.currentGrid,
-                                endedGame = newState.endedGame,
+                                gameStateType = newState.gameStateType,
                                 endedGameText = newState.endedGameText,
                                 currentGridList = newState.currentGrid.values
                                     .flatten()
@@ -90,7 +88,7 @@ class TicTacToeViewModel(
         index: Int,
         ticTacToeItem: TicTacToeItem
     ) {
-        if (ticTacToeItem.isChecked || _state.value.endedGame) return
+        if (ticTacToeItem.isChecked || _state.value.gameStateType.isFinished()) return
 
         val gameState = _state.value.toGameState()
 

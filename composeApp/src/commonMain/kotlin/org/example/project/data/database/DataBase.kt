@@ -8,13 +8,14 @@ import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import org.example.project.data.converters.PlayerConverter
 import org.example.project.data.converters.TicTacToeConverter
 import org.example.project.data.dao.GameDao
 import org.example.project.data.models.GameStateEntity
 import org.example.project.data.models.TicTacToeEntity
 
 @Database(entities = [GameStateEntity::class, TicTacToeEntity::class], version = 1)
-@TypeConverters(TicTacToeConverter::class)
+@TypeConverters(TicTacToeConverter::class, PlayerConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun getGameDao(): GameDao

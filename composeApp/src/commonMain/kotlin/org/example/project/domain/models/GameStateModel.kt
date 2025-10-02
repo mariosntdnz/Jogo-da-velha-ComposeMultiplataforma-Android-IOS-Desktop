@@ -1,20 +1,20 @@
 package org.example.project.domain.models
 
-import org.example.project.data.models.TicTacToeEntity
+import org.example.project.domain.useCase.GameStateType
 import org.example.project.presentation.viewmodels.TicTacToeState
 
 data class GameState(
     val id: Long = 0L,
     val gridLength: Int,
-    val firstPlayerName: String,
-    val secondPlayerName: String,
-    val currentPlayer: Int,
-    val endedGame: Boolean,
+    val firstPlayer: Player,
+    val secondPlayer: Player,
+    val currentPlayer: Player,
+    val gameStateType: GameStateType,
     val endedGameText: String,
     val currentGrid: HashMap<Int, List<TicTacToeItem>>
 )
 
-val EMPTY_GAME_STATE = GameState(0,0, "","",-1,false,"", hashMapOf(
+val EMPTY_GAME_STATE = GameState(0,0, Player(0),Player(1),Player(0),GameStateType.Ongoing,"", hashMapOf(
     *List(3) { row ->
         row to List(3) { TicTacToeItem(0) }
     }.toTypedArray()
@@ -23,10 +23,10 @@ val EMPTY_GAME_STATE = GameState(0,0, "","",-1,false,"", hashMapOf(
 fun GameState.toTicTacToeState(): TicTacToeState = TicTacToeState(
     id = this.id,
     gridLength = this.gridLength,
-    firstPlayerName = this.firstPlayerName,
-    secondPlayerName = this.secondPlayerName,
+    firstPlayer = this.firstPlayer,
+    secondPlayer = this.secondPlayer,
     currentPlayer = this.currentPlayer,
-    endedGame = this.endedGame,
+    gameStateType = this.gameStateType,
     endedGameText = this.endedGameText,
     currentGrid = HashMap(this.currentGrid.mapValues { entry ->
         entry.value.map { it.copy() }
@@ -36,10 +36,10 @@ fun GameState.toTicTacToeState(): TicTacToeState = TicTacToeState(
 fun TicTacToeState.toGameState(): GameState = GameState(
     id = this.id,
     gridLength = this.gridLength,
-    firstPlayerName = this.firstPlayerName,
-    secondPlayerName = this.secondPlayerName,
+    firstPlayer = this.firstPlayer,
+    secondPlayer = this.secondPlayer,
     currentPlayer = this.currentPlayer,
-    endedGame = this.endedGame,
+    gameStateType = this.gameStateType,
     endedGameText = this.endedGameText,
     currentGrid = HashMap(this.currentGrid.mapValues { entry ->
         entry.value.map { it.copy() }

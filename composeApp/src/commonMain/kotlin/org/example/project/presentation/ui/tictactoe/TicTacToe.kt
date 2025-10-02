@@ -30,9 +30,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -56,14 +54,12 @@ import org.koin.core.parameter.parametersOf
 fun TicTacToeScreen(
     navController: NavController,
     gameId: Long,
-    gridLength: Int,
-    firstPlayerName: String,
-    secondPlayerName: String
+    gridLength: Int
 ) {
 
     val viewModel = koinViewModel<TicTacToeViewModel>(
         parameters = {
-            parametersOf(gameId, gridLength, firstPlayerName, secondPlayerName )
+            parametersOf(gameId, gridLength)
         }
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -97,7 +93,7 @@ fun TicTacToeScreen(
                 .clickable(onClick = navController::navigateUp)
         )
 
-        if (state.endedGame) {
+        if (state.gameStateType.isFinished()) {
             FinishGamePopup(
                 finishGameText = state.endedGameText,
                 visible = true,

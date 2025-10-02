@@ -2,22 +2,29 @@ package org.example.project.domain.useCase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.example.project.core.const.DRAW_LABEL
 import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 
-data class EndGameResult(
-    val endGame: Boolean,
+enum class GameStateType {
+    Winner,
+    Ongoing,
+    Draw;
+
+    fun isFinished() = this == Winner || this == Draw
+}
+
+data class GameStateResult(
+    val gameStateType: GameStateType,
     val endGameText: String
 )
 
 class CheckGameEndUseCase {
     suspend operator fun invoke(
         gameState: GameState
-    ): EndGameResult = withContext(Dispatchers.Default){
+    ): GameStateResult = withContext(Dispatchers.Default){
 
         val gridLength = gameState.gridLength
-        val firstPlayerName = gameState.firstPlayerName
-        val secondPlayerName = gameState.secondPlayerName
         val currentGrid = gameState.currentGrid
         val gridGeneralList = currentGrid.values.flatten()
         val currentPlayer = gameState.currentPlayer
@@ -27,13 +34,17 @@ class CheckGameEndUseCase {
         val itsDraw = !hasWinner && gridGeneralList.none { it.label.isEmpty() }
 
         val endedGameText = when {
-            hasWinner -> "${if(((currentPlayer % 2 ) + 1) == 1) firstPlayerName else secondPlayerName} Ganhou !!"
-            itsDraw -> "Deu velha !!"
+            hasWinner -> "${currentPlayer.name} Ganhou !!"
+            itsDraw -> DRAW_LABEL
             else -> ""
         }
 
-        return@withContext EndGameResult(
-            endGame = hasWinner || itsDraw,
+        return@withContext GameStateResult(
+            gameStateType = when {
+                hasWinner -> GameStateType.Winner
+                itsDraw -> GameStateType.Draw
+                else -> GameStateType.Ongoing
+            },
             endGameText = endedGameText
         )
     }

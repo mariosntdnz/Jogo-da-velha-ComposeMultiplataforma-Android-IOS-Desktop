@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -86,7 +85,7 @@ fun StartGameScreen(
             )
             Spacer(modifier = Modifier.weight(.5f))
             TextField(
-                value = state.firstPlayerName,
+                value = state.firstPlayer.name,
                 onValueChange = viewModel::onChangeFirstPlayerName,
                 shape = RoundedCornerShape(16.dp),
                 label = { Text("Nome do Player 1") },
@@ -101,7 +100,7 @@ fun StartGameScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
-                value = state.secondPlayerName,
+                value = state.secondPlayer.name,
                 onValueChange = viewModel::onChangeSecondPlayerName,
                 shape = RoundedCornerShape(16.dp),
                 label = { Text("Nome do Player 2") },
@@ -138,8 +137,6 @@ fun StartGameScreen(
                             navController.navigate(
                                 Screen.TicTacToe(
                                     gridLength = state.gridLength,
-                                    firstPlayerName = state.firstPlayerNameOrDefault,
-                                    secondPlayerName = state.secondPlayerNameOrDefault,
                                     gameId = it
                                 )
                             )

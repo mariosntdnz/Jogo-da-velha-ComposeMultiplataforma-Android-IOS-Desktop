@@ -87,9 +87,7 @@ fun HistoryScreen(
                             navController.navigate(
                                 Screen.TicTacToe(
                                     gameId = game.gameId,
-                                    gridLength = game.gridLength,
-                                    firstPlayerName = game.player1Name,
-                                    secondPlayerName = game.player2Name
+                                    gridLength = game.gridLength
                                 )
                             )
                         }
@@ -181,7 +179,7 @@ fun HistoryItem(
                     winner = historyItem.winnerName
                 )
                 HistoryEntryType.Continue -> HistoryItemContinueBody(
-                    currentPlayer = historyItem.currentPlayer
+                    currentPlayer = historyItem.currentPlayer.name
                 )
             }
             Spacer(Modifier.height(8.dp))

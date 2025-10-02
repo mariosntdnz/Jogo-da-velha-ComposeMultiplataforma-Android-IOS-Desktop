@@ -6,9 +6,9 @@ data class HistoryEntry(
     val gameId: Long,
     val historyEntryType: HistoryEntryType,
     val winnerName: String,
-    val currentPlayer: String,
-    val player1Name: String,
-    val player2Name: String,
+    val currentPlayer: Player,
+    val player1: Player,
+    val player2: Player,
     val gridLength: Int,
     val gridLengthLabel: String,
     val gameHistoryTitle: String
