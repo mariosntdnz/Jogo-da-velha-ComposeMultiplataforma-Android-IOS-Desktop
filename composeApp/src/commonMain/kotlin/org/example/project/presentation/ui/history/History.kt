@@ -37,7 +37,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import kotlinx.coroutines.launch
 import org.example.project.domain.models.HistoryEntry
 import org.example.project.domain.useCase.HistoryFilterType
 import org.example.project.presentation.navigation.Screen
@@ -64,23 +62,13 @@ fun HistoryScreen(
     navController: NavController,
     filterType: String
 ) {
-
     var showDeleteDialog by remember { mutableStateOf(false) }
     var idToDelete by remember { mutableStateOf(0L) }
-
-    val scope = rememberCoroutineScope()
-
-    val dismissState = rememberDismissState(
-        confirmStateChange = { dismissValue ->
-            dismissValue == DismissValue.DismissedToStart
-        }
-    )
 
     val viewModel = koinViewModel<HistoryViewModel>(
         parameters = {
             parametersOf(HistoryFilterType.valueOf(filterType))
         }
-
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -111,7 +99,6 @@ fun HistoryScreen(
             else -> {
                 DefaultHistoryScreen(
                     list = state.historyItems,
-                    dismissState = dismissState,
                     onDelete = { game ->
                         idToDelete = game.gameId
                         showDeleteDialog = true
@@ -139,9 +126,6 @@ fun HistoryScreen(
                 },
                 onDismiss = {
                     showDeleteDialog = false
-                    scope.launch {
-                        dismissState.reset()
-                    }
                 }
             )
         }
@@ -152,18 +136,16 @@ fun HistoryScreen(
 @Composable
 fun DefaultHistoryScreen(
     list: List<HistoryEntry>,
-    dismissState: DismissState,
     onDelete: (HistoryEntry) -> Unit,
     onClick: (HistoryEntry) -> Unit
 ) {
-    HistoryList(list, dismissState, onDelete, onClick)
+    HistoryList(list, onDelete, onClick)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HistoryList(
     list: List<HistoryEntry>,
-    dismissState: DismissState,
     onDelete: (HistoryEntry) -> Unit,
     onClick: (HistoryEntry) -> Unit
 ) {
@@ -176,15 +158,19 @@ fun HistoryList(
             items = list,
             key = { it.gameId }
         ) { historyItem ->
+            val dismissState = rememberDismissState(
+                confirmStateChange = { dismissValue ->
+                    if (dismissValue == DismissValue.DismissedToStart) {
+                        onDelete(historyItem)
+                    }
+                    false
+                }
+            )
+
             HistoryItemWithDeleteOption(
                 dismissState = dismissState,
                 historyItem = historyItem,
-                onDelete = {
-                    onDelete(historyItem)
-                },
-                onClick = {
-                    onClick(historyItem)
-                }
+                onClick = { onClick(historyItem) }
             )
             Spacer(Modifier.height(16.dp))
         }
@@ -194,16 +180,10 @@ fun HistoryList(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HistoryItemWithDeleteOption(
-    historyItem: HistoryEntry,
     dismissState: DismissState,
-    onDelete: () -> Unit,
+    historyItem: HistoryEntry,
     onClick: () -> Unit
 ) {
-
-    if (dismissState.currentValue == DismissValue.DismissedToStart) {
-        onDelete()
-    }
-
     SwipeToDismiss(
         state = dismissState,
         background = {
