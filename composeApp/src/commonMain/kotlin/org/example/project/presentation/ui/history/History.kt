@@ -13,16 +13,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissState
+import androidx.compose.material.DismissValue
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import org.example.project.domain.models.HistoryEntry
 import org.example.project.domain.useCase.HistoryFilterType
 import org.example.project.presentation.navigation.Screen
@@ -41,11 +59,23 @@ import org.example.project.presentation.viewmodels.HistoryViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,
     filterType: String
 ) {
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var idToDelete by remember { mutableStateOf(0L) }
+
+    val scope = rememberCoroutineScope()
+
+    val dismissState = rememberDismissState(
+        confirmStateChange = { dismissValue ->
+            dismissValue == DismissValue.DismissedToStart
+        }
+    )
 
     val viewModel = koinViewModel<HistoryViewModel>(
         parameters = {
@@ -82,6 +112,11 @@ fun HistoryScreen(
             else -> {
                 DefaultHistoryScreen(
                     list = state.historyItems,
+                    dismissState = dismissState,
+                    onDelete = { game ->
+                        idToDelete = game.gameId
+                        showDeleteDialog = true
+                    },
                     onClick = { game ->
                         if (game.historyEntryType != HistoryEntryType.Finished) {
                             navController.navigate(
@@ -95,20 +130,42 @@ fun HistoryScreen(
                 )
             }
         }
+
+        if (showDeleteDialog) {
+            ConfirmDeletePopup(
+                showDialog = showDeleteDialog,
+                onConfirm = {
+                    viewModel.delete(idToDelete)
+                    showDeleteDialog = false
+                },
+                onDismiss = {
+                    showDeleteDialog = false
+                    scope.launch {
+                        dismissState.reset()
+                    }
+                }
+            )
+        }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DefaultHistoryScreen(
     list: List<HistoryEntry>,
+    dismissState: DismissState,
+    onDelete: (HistoryEntry) -> Unit,
     onClick: (HistoryEntry) -> Unit
 ) {
-    HistoryList(list, onClick)
+    HistoryList(list, dismissState, onDelete, onClick)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HistoryList(
     list: List<HistoryEntry>,
+    dismissState: DismissState,
+    onDelete: (HistoryEntry) -> Unit,
     onClick: (HistoryEntry) -> Unit
 ) {
     LazyColumn(
@@ -120,8 +177,12 @@ fun HistoryList(
             items = list,
             key = { it.gameId }
         ) { historyItem ->
-            HistoryItem(
+            HistoryItemWithDeleteOption(
+                dismissState = dismissState,
                 historyItem = historyItem,
+                onDelete = {
+                    onDelete(historyItem)
+                },
                 onClick = {
                     onClick(historyItem)
                 }
@@ -131,6 +192,34 @@ fun HistoryList(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun HistoryItemWithDeleteOption(
+    historyItem: HistoryEntry,
+    dismissState: DismissState,
+    onDelete: () -> Unit,
+    onClick: () -> Unit
+) {
+
+    if (dismissState.currentValue == DismissValue.DismissedToStart) {
+        onDelete()
+    }
+
+    SwipeToDismiss(
+        state = dismissState,
+        background = {
+            HistoryItemDeleteOption(dismissState)
+        },
+        dismissContent = {
+            HistoryItem(
+                historyItem = historyItem,
+                onClick = onClick
+            )
+        },
+        directions = setOf(DismissDirection.EndToStart)
+    )
+}
+
 @Composable
 fun HistoryItem(
     historyItem: HistoryEntry,
@@ -138,7 +227,9 @@ fun HistoryItem(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+        ,
         backgroundColor = Color.White,
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -146,7 +237,6 @@ fun HistoryItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .clickable(onClick = onClick)
         ) {
             Text(
                 modifier = Modifier
@@ -197,6 +287,44 @@ fun HistoryItem(
                     textColor = Color.Black
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun HistoryItemDeleteOption(
+    dismissState: DismissState
+) {
+    val color = when (dismissState.dismissDirection) {
+        DismissDirection.EndToStart -> Color.Red
+        else -> Color.Transparent
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color, shape = RoundedCornerShape(16.dp))
+            .padding(end = 64.dp),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        if (dismissState.dismissDirection == DismissDirection.EndToStart) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Excluir",
+                    fontSize = 24.sp,
+                    color = Color.White
+                )
+                Spacer(Modifier.width(16.dp))
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Deletar",
+                    tint = Color.White
+                )
+            }
+
         }
     }
 }
@@ -283,3 +411,35 @@ fun BoxScope.ErrorHistory(
         )
     }
 }
+
+@Composable
+fun BoxScope.ConfirmDeletePopup(
+    showDialog: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    if (showDialog) {
+        AlertDialog(
+            modifier = Modifier
+                .align(Alignment.Center),
+            onDismissRequest = onDismiss,
+            title = {
+                Text(text = "Confirmar exclusão")
+            },
+            text = {
+                Text("Tem certeza que deseja deletar este item?")
+            },
+            confirmButton = {
+                TextButton(onClick = onConfirm) {
+                    Text("Sim")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+}
+

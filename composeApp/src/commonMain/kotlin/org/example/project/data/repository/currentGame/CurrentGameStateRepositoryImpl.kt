@@ -30,8 +30,8 @@ class CurrentGameStateRepositoryImpl(
         }
     }
 
-    override suspend fun deleteGameState(game: GameState) {
-        localDataSource.deleteGameState(gameStateMapper.map(game))
+    override suspend fun deleteGameState(gameId: Long) {
+        localDataSource.deleteGameState(gameId)
     }
 
 }

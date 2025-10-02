@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.project.domain.models.HistoryEntry
+import org.example.project.domain.useCase.DeleteCurrentGameUseCase
 import org.example.project.domain.useCase.GetHistoryUseCase
 import org.example.project.domain.useCase.HistoryFilterType
 
@@ -40,7 +41,8 @@ data class HistoryState(
 
 class HistoryViewModel(
     filterType: HistoryFilterType,
-    private val getHistoryUseCase: GetHistoryUseCase
+    private val getHistoryUseCase: GetHistoryUseCase,
+    private val deleteCurrentGameUseCase: DeleteCurrentGameUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HistoryState())
@@ -60,6 +62,12 @@ class HistoryViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun delete(gameId: Long) {
+        viewModelScope.launch {
+            deleteCurrentGameUseCase(gameId)
         }
     }
 }

@@ -6,5 +6,5 @@ import org.example.project.domain.models.GameState
 class DeleteCurrentGameUseCase(
     private val currentGameStateRepository: CurrentGameStateRepository
 ) {
-    suspend operator fun invoke(game: GameState) = currentGameStateRepository.deleteGameState(game)
+    suspend operator fun invoke(gameId: Long) = currentGameStateRepository.deleteGameState(gameId)
 }

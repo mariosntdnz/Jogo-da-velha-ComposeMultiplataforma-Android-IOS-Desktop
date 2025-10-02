@@ -13,8 +13,8 @@ interface GameDao {
     @Upsert
     suspend fun updateGame(game: GameStateEntity): Long
 
-    @Delete
-    suspend fun deleteGame(game: GameStateEntity)
+    @Query("DELETE FROM game WHERE id = :id")
+    suspend fun deleteGame(id: Long)
 
     @Query("select * from game where id = :id")
     fun getGameState(id: Long): Flow<GameStateEntity?>
