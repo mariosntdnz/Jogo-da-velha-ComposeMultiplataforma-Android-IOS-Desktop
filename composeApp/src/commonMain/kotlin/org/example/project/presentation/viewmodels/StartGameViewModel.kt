@@ -19,6 +19,7 @@ import org.example.project.core.const.PLAYER2_MARKER
 import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.EMPTY_GAME_STATE
 import org.example.project.domain.models.Player
+import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.useCase.GetHistoryUseCase
 import org.example.project.domain.useCase.HistoryFilterType
 import org.example.project.domain.useCase.UpsertGameUseCase
@@ -152,7 +153,12 @@ class StartGameViewModel(
                     gridLength = state.gridLength,
                     firstPlayer = firstPlayer,
                     secondPlayer = secondPlayer,
-                    currentPlayer = firstPlayer
+                    currentPlayer = firstPlayer,
+                    currentGrid = hashMapOf(
+                        *List(state.gridLength) { row ->
+                            row to List(state.gridLength) { TicTacToeItem(0) }
+                        }.toTypedArray()
+                    )
                 )
             )
             if (id != UPSERT_ERROR) {
