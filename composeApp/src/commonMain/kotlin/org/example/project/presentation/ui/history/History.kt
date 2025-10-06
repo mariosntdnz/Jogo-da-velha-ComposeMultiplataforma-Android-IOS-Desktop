@@ -49,6 +49,7 @@ import androidx.navigation.NavController
 import org.example.project.domain.models.HistoryEntry
 import org.example.project.domain.useCase.HistoryFilterType
 import org.example.project.presentation.navigation.Screen
+import org.example.project.presentation.ui.components.BackButton
 import org.example.project.presentation.ui.components.SimpleButton
 import org.example.project.presentation.ui.components.SimpleTextCard
 import org.example.project.presentation.viewmodels.HistoryEntryType
@@ -72,62 +73,72 @@ fun HistoryScreen(
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Red.copy(alpha = .25f))
             .systemBarsPadding()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 8.dp)
     ) {
-        when {
-            state.isLoading -> {
-                LoadingScreen()
-            }
-            state.hasError -> {
-                ErrorHistory(
-                    msg = state.errorMsg,
-                    onClick = {
-                        navController.navigate(Screen.StartGame){
-                            popUpTo(0) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    }
-                )
-            }
-            else -> {
-                DefaultHistoryScreen(
-                    list = state.historyItems,
-                    onDelete = { game ->
-                        idToDelete = game.gameId
-                        showDeleteDialog = true
-                    },
-                    onClick = { game ->
-                        if (game.historyEntryType != HistoryEntryType.Finished) {
-                            navController.navigate(
-                                Screen.TicTacToe(
-                                    gameId = game.gameId,
-                                    gridLength = game.gridLength
-                                )
-                            )
-                        }
-                    }
-                )
-            }
-        }
-
-        if (showDeleteDialog) {
-            ConfirmDeletePopup(
-                showDialog = showDeleteDialog,
-                onConfirm = {
-                    viewModel.delete(idToDelete)
-                    showDeleteDialog = false
-                },
-                onDismiss = {
-                    showDeleteDialog = false
+        BackButton(
+            modifier = Modifier
+                .align(Alignment.Start),
+            onClick = navController::navigateUp
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            when {
+                state.isLoading -> {
+                    LoadingScreen()
                 }
-            )
+                state.hasError -> {
+                    ErrorHistory(
+                        msg = state.errorMsg,
+                        onClick = {
+                            navController.navigate(Screen.StartGame){
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+                else -> {
+                    DefaultHistoryScreen(
+                        list = state.historyItems,
+                        onDelete = { game ->
+                            idToDelete = game.gameId
+                            showDeleteDialog = true
+                        },
+                        onClick = { game ->
+                            if (game.historyEntryType != HistoryEntryType.Finished) {
+                                navController.navigate(
+                                    Screen.TicTacToe(
+                                        gameId = game.gameId,
+                                        gridLength = game.gridLength
+                                    )
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+
+            if (showDeleteDialog) {
+                ConfirmDeletePopup(
+                    showDialog = showDeleteDialog,
+                    onConfirm = {
+                        viewModel.delete(idToDelete)
+                        showDeleteDialog = false
+                    },
+                    onDismiss = {
+                        showDeleteDialog = false
+                    }
+                )
+            }
         }
     }
 }

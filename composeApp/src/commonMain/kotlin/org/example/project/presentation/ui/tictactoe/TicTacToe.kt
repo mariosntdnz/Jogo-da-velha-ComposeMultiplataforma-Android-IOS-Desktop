@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import org.example.project.domain.models.TicTacToeItem
+import org.example.project.presentation.ui.components.BackButton
 import org.example.project.presentation.ui.components.SimpleTextCard
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.example.project.utils.clickableWithoutAnimation
@@ -109,16 +110,12 @@ fun TicTacToeScreen(
             )
         }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "",
-            tint = Color.Blue ,
+        BackButton(
             modifier = Modifier
-                .statusBarsPadding()
                 .align(Alignment.TopStart)
                 .padding(start = 8.dp)
-                .size(36.dp)
-                .clickable(onClick = navController::navigateUp)
+            ,
+            onClick = navController::navigateUp
         )
 
         if (state.gameStateType.isFinished()) {
