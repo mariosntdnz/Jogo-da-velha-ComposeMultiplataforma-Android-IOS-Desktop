@@ -2,7 +2,11 @@ package org.example.project.presentation.ui.tictactoe
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
@@ -37,6 +41,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import org.example.project.domain.models.TicTacToeItem
+import org.example.project.presentation.ui.components.SimpleTextCard
 import org.example.project.presentation.viewmodels.TicTacToeViewModel
 import org.example.project.utils.clickableWithoutAnimation
 import org.koin.compose.viewmodel.koinViewModel
@@ -64,6 +70,22 @@ fun TicTacToeScreen(
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val infiniteTransition = rememberInfiniteTransition()
+    val animatedAlpha by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val animatedBackgroundColor = lerp(
+        start = Color.Blue.copy(alpha = .25f),
+        stop = Color.Blue.copy(alpha = .7f),
+        fraction = animatedAlpha
+    )
+
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -73,12 +95,18 @@ fun TicTacToeScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            CurrentPlayerLabel(
+                modifier = Modifier
+                    .padding(bottom = 32.dp),
+                backgroundColor = animatedBackgroundColor,
+                namePlayer = state.currentPlayer.name,
+                markerPlayer = state.currentPlayer.marker
+            )
             TicTacToeGrid(
                 qtyCells = state.gridLength,
                 list = state.currentGridList,
                 onClickItem = viewModel::makeAMove
             )
-
         }
 
         Icon(
@@ -239,5 +267,20 @@ fun FinishGamePopup(
             )
         }
     }
+}
+
+@Composable
+fun CurrentPlayerLabel(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Blue.copy(alpha = .7f),
+    namePlayer: String,
+    markerPlayer: String
+) {
+    SimpleTextCard(
+        modifier = modifier,
+        text = "$namePlayer  ->  $markerPlayer",
+        backgroundColor = backgroundColor,
+        textColor = Color.Black
+    )
 }
 

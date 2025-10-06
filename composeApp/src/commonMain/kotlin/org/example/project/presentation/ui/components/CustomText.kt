@@ -12,12 +12,13 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SimpleTextCard(
+    modifier: Modifier = Modifier,
     text: String,
     backgroundColor: Color,
     textColor: Color
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
