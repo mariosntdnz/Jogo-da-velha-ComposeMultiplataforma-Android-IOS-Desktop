@@ -47,6 +47,12 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
         }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
         
         androidMain.dependencies {
             implementation(compose.preview)
@@ -71,6 +77,13 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.kotlinx.serialization.json.v163)
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.websockets)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.logback.classic)
+            implementation(libs.ktor.server.config.yaml)
+            implementation(libs.ktor.server.test.host)
+            implementation(libs.kotlin.test.junit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
