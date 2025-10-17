@@ -1,7 +1,9 @@
 package org.example.project.domain.models
 
+import kotlinx.serialization.Serializable
 import org.example.project.data.models.TicTacToeEntity
 
+@Serializable
 data class TicTacToeItem(
     val id: Int = 0,
     val label: String = "",

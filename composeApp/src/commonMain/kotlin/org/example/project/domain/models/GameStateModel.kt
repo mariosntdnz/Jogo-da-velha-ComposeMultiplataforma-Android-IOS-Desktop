@@ -1,8 +1,10 @@
 package org.example.project.domain.models
 
+import kotlinx.serialization.Serializable
 import org.example.project.domain.useCase.GameStateType
 import org.example.project.presentation.viewmodels.TicTacToeState
 
+@Serializable
 data class GameState(
     val id: Long = 0L,
     val gridLength: Int,
