@@ -8,15 +8,16 @@ androidx-lifecycle = "2.8.1"
 compose-multiplatform = "1.7.0"
 koinAndroid = "3.5.3"
 koinAndroidxCompose = "3.5.3"
-kotlin = "2.1.0"
+kotlin = "2.2.20"
 kotlinx-coroutines = "1.9.0"
+kotlinxCoroutinesTest = "1.10.2"
 kotlinxSerializationJson = "1.8.0"
 kotlinxSerializationJsonVersion = "1.6.3"
 navigationCompose = "2.8.0-alpha08"
 koin = "4.1.0-Beta1"
 room = "2.7.2"
 sqlite = "2.5.2"
-ksp = "2.1.10-1.0.30"
+ksp = "2.2.20-2.0.4"
 ktor = "3.3.0"
 logback = "1.4.14"
 
@@ -27,8 +28,10 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 koin-android-v353 = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-serialization-json-v163 = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -38,12 +41,10 @@ koin-composeViewModel = { module = "io.insert-koin:koin-compose-viewmodel", vers
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
-ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
+ktor-server-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-server-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
-ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+ktor-server-test-client = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -81,9 +81,9 @@ kotlin {
             implementation(libs.ktor.server.websockets)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.logback.classic)
-            implementation(libs.ktor.server.config.yaml)
-            implementation(libs.ktor.server.test.host)
-            implementation(libs.kotlin.test.junit)
+            implementation(libs.ktor.server.test.client)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.cio)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -108,6 +108,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    packaging {
+        resources.pickFirsts.add("META-INF/DEPENDENCIES")
+        resources.pickFirsts.add("META-INF/LICENSE.md")
+        resources.pickFirsts.add("META-INF/LICENSE-notice.md")
+        resources.pickFirsts.add("META-INF/INDEX.LIST")
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false

@@ -1,11 +1,12 @@
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
-import io.ktor.server.testing.testApplication
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.example.project.domain.models.EMPTY_GAME_STATE
 import org.example.project.domain.models.GameRoom
@@ -16,9 +17,8 @@ import kotlin.test.assertEquals
 class WebSocketTest {
 
     @Test
-    fun testWebSocket() = testApplication {
-
-        val realClient = HttpClient(CIO) {
+    fun testWebSocket() = runTest {
+        val realClient = HttpClient(MockEngine) {
             install(WebSockets) {
                 pingIntervalMillis = 20_000
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
@@ -34,7 +34,7 @@ class WebSocketTest {
     }
 
     @Test
-    fun testSendWebSocket() = testApplication {
+    fun testSendWebSocket() = runTest {
 
         val realClient = HttpClient(CIO) {
             install(WebSockets) {
