@@ -1,7 +1,7 @@
 package org.example.project.data.mappers
 
-import org.example.project.data.models.GameStateEntity
-import org.example.project.data.models.TicTacToeEntity
+import org.example.project.data.models.local.GameStateEntity
+import org.example.project.data.models.local.TicTacToeEntity
 import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
 import org.example.project.domain.models.toEntity

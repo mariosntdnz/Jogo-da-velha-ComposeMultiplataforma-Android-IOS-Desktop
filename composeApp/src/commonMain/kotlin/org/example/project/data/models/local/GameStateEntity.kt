@@ -1,8 +1,7 @@
-package org.example.project.data.models
+package org.example.project.data.models.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.example.project.domain.models.Player
 import org.example.project.domain.useCase.GameStateType
 
 @Entity(tableName = "game")

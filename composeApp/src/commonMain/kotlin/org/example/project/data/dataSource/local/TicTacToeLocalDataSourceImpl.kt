@@ -2,7 +2,7 @@ package org.example.project.data.dataSource.local
 
 import kotlinx.coroutines.flow.Flow
 import org.example.project.data.dao.GameDao
-import org.example.project.data.models.GameStateEntity
+import org.example.project.data.models.local.GameStateEntity
 
 class TicTacToeLocalDataSourceImpl(
     private val gameStateDao: GameDao

@@ -1,7 +1,7 @@
 package org.example.project.domain.models
 
 import kotlinx.serialization.Serializable
-import org.example.project.data.models.PlayerEntity
+import org.example.project.data.models.local.PlayerEntity
 
 @Serializable
 data class Player(

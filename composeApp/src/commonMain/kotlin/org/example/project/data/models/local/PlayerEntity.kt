@@ -1,4 +1,4 @@
-package org.example.project.data.models
+package org.example.project.data.models.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Entity
-data class TicTacToeEntity(
+data class PlayerEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val label: String = "",
-    val isChecked: Boolean = false
+    val id: Long,
+    val name: String,
+    val marker: String
 )

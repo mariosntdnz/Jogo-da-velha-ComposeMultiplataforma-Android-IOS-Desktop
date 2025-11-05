@@ -11,8 +11,8 @@ import kotlinx.coroutines.IO
 import org.example.project.data.converters.PlayerConverter
 import org.example.project.data.converters.TicTacToeConverter
 import org.example.project.data.dao.GameDao
-import org.example.project.data.models.GameStateEntity
-import org.example.project.data.models.TicTacToeEntity
+import org.example.project.data.models.local.GameStateEntity
+import org.example.project.data.models.local.TicTacToeEntity
 
 @Database(entities = [GameStateEntity::class, TicTacToeEntity::class], version = 1)
 @TypeConverters(TicTacToeConverter::class, PlayerConverter::class)
