@@ -118,7 +118,8 @@ fun HistoryScreen(
                                 navController.navigate(
                                     Screen.TicTacToe(
                                         gameId = game.gameId,
-                                        gridLength = game.gridLength
+                                        gridLength = game.gridLength,
+                                        isOnlineGame = false
                                     )
                                 )
                             }

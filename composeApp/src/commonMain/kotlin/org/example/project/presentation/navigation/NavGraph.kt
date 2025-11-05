@@ -22,7 +22,8 @@ fun AppNavigation() {
             TicTacToeScreen(
                 navController = navController,
                 gridLength = ticTacToe.gridLength,
-                gameId = ticTacToe.gameId
+                gameId = ticTacToe.gameId,
+                isOnlineGame = ticTacToe.isOnlineGame
             )
         }
         composable<Screen.History> { screen ->

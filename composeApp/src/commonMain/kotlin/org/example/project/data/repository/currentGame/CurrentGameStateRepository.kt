@@ -5,6 +5,9 @@ import org.example.project.domain.models.GameState
 
 interface CurrentGameStateRepository {
     suspend fun updateGame(game: GameState): Long
-    fun getGameState(id: Long): Flow<GameState?>
+    fun getGameState(
+        isOnlineGame: Boolean,
+        id: Long
+    ): Flow<GameState?>
     suspend fun deleteGameState(gameId: Long)
 }

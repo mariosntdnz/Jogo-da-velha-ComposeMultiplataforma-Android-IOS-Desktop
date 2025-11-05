@@ -8,7 +8,8 @@ val modules = listOf(
     useCaseModules,
     dataBasePlatformModule,
     repositoryModule,
-    dataSourceModule
+    dataSourceModule,
+    serviceModule
 )
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {

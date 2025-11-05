@@ -11,7 +11,8 @@ val repositoryModule = module {
     factory<CurrentGameStateRepository> {
         CurrentGameStateRepositoryImpl(
             localDataSource = get(),
-            gameStateMapper = GameStateMapper
+            gameStateMapper = GameStateMapper,
+            remoteDataSource = get()
         )
     }
 

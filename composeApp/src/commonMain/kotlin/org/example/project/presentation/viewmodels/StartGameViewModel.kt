@@ -16,6 +16,7 @@ import org.example.project.core.const.PLAYER1_DEFAULT_NAME
 import org.example.project.core.const.PLAYER1_MARKER
 import org.example.project.core.const.PLAYER2_DEFAULT_NAME
 import org.example.project.core.const.PLAYER2_MARKER
+import org.example.project.data.repository.currentGame.DEFAULT_ROOM
 import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.EMPTY_GAME_STATE
 import org.example.project.domain.models.Player
@@ -131,7 +132,7 @@ class StartGameViewModel(
         }
     }
 
-    fun onNewGameClick(onFinish: (Long) -> Unit) {
+    fun onNewGameClick(isOnlineGame: Boolean = false, onFinish: (Long) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val state = _state.value
             val firstPlayer = if (state.firstPlayer.name.isEmpty()) {
@@ -158,7 +159,9 @@ class StartGameViewModel(
                         *List(state.gridLength) { row ->
                             row to List(state.gridLength) { TicTacToeItem(0) }
                         }.toTypedArray()
-                    )
+                    ),
+                    isOnlineGame = isOnlineGame,
+                    id = if (isOnlineGame) DEFAULT_ROOM else 0
                 )
             )
             if (id != UPSERT_ERROR) {

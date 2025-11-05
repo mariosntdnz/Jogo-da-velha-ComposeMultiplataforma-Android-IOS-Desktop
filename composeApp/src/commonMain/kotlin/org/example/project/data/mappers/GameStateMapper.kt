@@ -41,7 +41,8 @@ object GameStateMapper: Mapper<GameState,  GameStateEntity> {
             currentPlayer = output.currentTurn.toModel(),
             gameStateType = output.gameStateType,
             endedGameText = output.endedGameText,
-            currentGrid = mappedGrid
+            currentGrid = mappedGrid,
+            isOnlineGame = false
         )
     }
 

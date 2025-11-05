@@ -1,4 +1,4 @@
-package org.example.project.data.dataSource
+package org.example.project.data.dataSource.local
 
 import kotlinx.coroutines.flow.Flow
 import org.example.project.data.dao.GameDao

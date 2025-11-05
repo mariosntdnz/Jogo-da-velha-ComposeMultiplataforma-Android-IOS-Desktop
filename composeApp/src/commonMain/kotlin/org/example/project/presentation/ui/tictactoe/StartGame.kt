@@ -137,13 +137,32 @@ fun StartGameScreen(
                             navController.navigate(
                                 Screen.TicTacToe(
                                     gridLength = state.gridLength,
-                                    gameId = it
+                                    gameId = it,
+                                    isOnlineGame = false
                                 )
                             )
                         }
                     }
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            SimpleButton(
+                modifierButton = Modifier
+                    .fillMaxWidth(),
+                text = "Modo online",
+                fontSize = 20.sp,
+                onClick = {
+                    viewModel.onNewGameClick(isOnlineGame = true) {
+                        navController.navigate(
+                            Screen.TicTacToe(
+                                gridLength = state.gridLength,
+                                gameId = it,
+                                isOnlineGame = true
+                            )
+                        )
+                    }
+                }
+            )
             Spacer(modifier = Modifier.weight(1f))
         }
 

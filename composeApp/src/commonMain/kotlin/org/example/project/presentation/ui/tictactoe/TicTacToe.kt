@@ -61,12 +61,13 @@ import org.koin.core.parameter.parametersOf
 fun TicTacToeScreen(
     navController: NavController,
     gameId: Long,
-    gridLength: Int
+    gridLength: Int,
+    isOnlineGame: Boolean
 ) {
 
     val viewModel = koinViewModel<TicTacToeViewModel>(
         parameters = {
-            parametersOf(gameId, gridLength)
+            parametersOf(gameId, gridLength, isOnlineGame)
         }
     )
     val state by viewModel.state.collectAsStateWithLifecycle()

@@ -1,6 +1,7 @@
 package org.example.project.domain.useCase
 
 import org.example.project.core.listExtensions.copyReplacing
+import org.example.project.data.repository.currentGame.CurrentGameStateRepository
 import org.example.project.data.repository.currentGame.UPSERT_ERROR
 import org.example.project.domain.models.GameState
 import org.example.project.domain.models.TicTacToeItem
@@ -11,7 +12,7 @@ data class MadeAMoveResult(
 )
 
 class MakeAMoveUseCase(
-    private val upsertGameUseCase: UpsertGameUseCase,
+    private val currentGameStateRepository: CurrentGameStateRepository,
     private val checkGameEndUseCase: CheckGameEndUseCase
 ) {
     suspend operator fun invoke(
@@ -44,7 +45,7 @@ class MakeAMoveUseCase(
 
         )
 
-        val updated = upsertGameUseCase(newGameState) != UPSERT_ERROR
+        val updated = currentGameStateRepository.updateGame(game = newGameState) != UPSERT_ERROR
 
         return MadeAMoveResult(
             updated = updated,

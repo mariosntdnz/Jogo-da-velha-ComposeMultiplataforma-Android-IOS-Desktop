@@ -24,6 +24,7 @@ data class TicTacToeState(
     val firstPlayer: Player,
     val secondPlayer: Player,
     val currentPlayer: Player,
+    val isOnlineGame: Boolean,
     val gameStateType: GameStateType,
     val endedGameText: String,
     val currentGrid: HashMap<Int, List<TicTacToeItem>>,
@@ -33,6 +34,7 @@ data class TicTacToeState(
 class TicTacToeViewModel(
     gameId: Long,
     gridLength: Int,
+    isOnlineGame: Boolean,
     private val makeAMoveUseCase: MakeAMoveUseCase,
     private val getCurrentGame: GetCurrentGameUseCase,
     private val upsertGameUseCase: UpsertGameUseCase
@@ -47,6 +49,7 @@ class TicTacToeViewModel(
             secondPlayer = Player(),
             gameStateType = GameStateType.Ongoing,
             endedGameText = "",
+            isOnlineGame = isOnlineGame,
             currentGrid = hashMapOf(
                 *List(gridLength) { row ->
                     row to List(gridLength) { TicTacToeItem() }
@@ -60,12 +63,13 @@ class TicTacToeViewModel(
 
     init {
         observeGameStateJob = viewModelScope.launch(Dispatchers.IO) {
-            getCurrentGame(gameId).collect { newState ->
+            getCurrentGame(gameId, isOnlineGame).collect { newState ->
                 newState?.let {
                     withContext(Dispatchers.Main) {
                         _state.update { oldState ->
                             oldState.copy(
                                 id = newState.id,
+                                isOnlineGame = oldState.isOnlineGame,
                                 gridLength = newState.gridLength,
                                 firstPlayer = newState.firstPlayer,
                                 secondPlayer = newState.secondPlayer,

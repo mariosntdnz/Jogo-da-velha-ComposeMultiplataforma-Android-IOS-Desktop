@@ -2,7 +2,7 @@ package org.example.project.data.repository.allGames
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.example.project.data.dataSource.TicTacToeLocalDataSource
+import org.example.project.data.dataSource.local.TicTacToeLocalDataSource
 import org.example.project.data.mappers.Mapper
 import org.example.project.data.models.GameStateEntity
 import org.example.project.domain.models.GameState

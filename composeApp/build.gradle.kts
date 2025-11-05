@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.androidx.compose)
             implementation(libs.koin.android.v353)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -80,7 +81,7 @@ kotlin {
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.websockets)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.logback.classic)
+            //implementation(libs.logback.classic)
             implementation(libs.ktor.server.test.client)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.ktor.client.cio)
@@ -88,6 +89,9 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

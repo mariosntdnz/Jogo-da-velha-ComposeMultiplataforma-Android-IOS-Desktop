@@ -11,6 +11,7 @@ sealed class Screen(val route: String) {
     ): Screen("history_game")
     @Serializable data class TicTacToe(
         val gameId: Long,
-        val gridLength: Int
+        val gridLength: Int,
+        val isOnlineGame: Boolean
     ): Screen("tic_tac_toe")
 }
