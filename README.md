@@ -1,14 +1,37 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
+# Jogo da Velha Multiplataforma (KMP & CMP)
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+Este projeto é um **Jogo da Velha** desenvolvido com foco em **boas práticas de desenvolvimento**, seguindo princípios de **Clean Code**, **Clean Architecture** e **MVVM**, utilizando recursos modernos do Kotlin como **Flow**, **Coroutines**, **Navigation**, além de **Koin** para injeção de dependência, **Ktor** para requisições e lado do servidor e **Room** para persistência de dados.  
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+O projeto é **Kotlin Multiplatform (KMP)** e **Compose Multiplataforma (CMP)**, permitindo uma base de código compartilhada entre diferentes plataformas(Android, IOS e Desktop).
+
+---
+
+## Funcionalidades
+
+- 🎮 **Novo jogo**: Comece uma partida do zero.  
+- ⏯️ **Continuar jogo existente**: Retome partidas salvas.  
+- 🔢 **Escolha do tamanho do grid**: De 3x3 até 10x10.  
+- 📜 **Histórico de jogos**: Consulte partidas anteriores e acompanhe resultados.  
+- 🌐 **Modo online via WebSocket**: Jogue em tempo real com outro dispositivo.  
+  - O **WebSocket** foi implementado em **Kotlin KMP** em outro projeto. Confira em: [kotlin server](https://github.com/mariosntdnz/tic-tac-toe-server)
+
+---
+
+## Tecnologias e conceitos aplicados
+
+- **Clean Code & Clean Architecture**  
+- **MVVM**  
+- **Kotlin Flow e Coroutines**  
+- **Navigation Component**  
+- **Koin** (injeção de dependência)  
+- **Room** (persistência local)  
+- **Kotlin Multiplatform (KMP) e CMP**  
+- **WebSocket com ktor para comunicação em tempo real**
+
+---
+
+## Próximos passos
+
+O projeto tem foco em **estudos e boas práticas**, mas há espaço para evolução, como a criação de salas para jogar. Por enquanto há apenas 2 jogadores pois o objetivo era aprender a criar o lado do servidor da comunicação com websocket.
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
